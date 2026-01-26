@@ -1,4 +1,4 @@
-package vlad.corp.money_manager_backend.transactions.infrastructure.persistence;
+package vlad.corp.money_manager_backend.infrastructure.persistence.transaction;
 
 
 import jakarta.persistence.Entity;

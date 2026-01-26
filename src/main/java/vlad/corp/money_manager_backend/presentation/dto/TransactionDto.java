@@ -1,4 +1,4 @@
-package vlad.corp.money_manager_backend.transactions.presentation.dto;
+package vlad.corp.money_manager_backend.presentation.dto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
