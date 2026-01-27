@@ -18,17 +18,20 @@ public class Wallet {
     private final LocalDateTime createdAt;
     private final String name;
     private final JoinCode joinCode;
+    private final String currencyCode;
 
-    private Wallet(UUID walletId, UUID ownerId, LocalDateTime createdAt, Set<UUID> memberIds, String name, JoinCode joinCode) {
+    private Wallet(UUID walletId, UUID ownerId, LocalDateTime createdAt,
+                   Set<UUID> memberIds, String name, JoinCode joinCode, String currencyCode) {
         this.walletId = walletId;
         this.ownerId = ownerId;
         this.memberIds = new HashSet<>(memberIds);
         this.createdAt = createdAt;
         this.name = name;
         this.joinCode = joinCode;
+        this.currencyCode = currencyCode;
     }
 
-    public static Wallet create(UUID ownerId, String name, JoinCode joinCode) {
+    public static Wallet create(UUID ownerId, String name, JoinCode joinCode, String currencyCode) {
         Set<UUID> members = new HashSet<>();
         members.add(ownerId);
         return new Wallet(
@@ -37,17 +40,22 @@ public class Wallet {
                 LocalDateTime.now(),
                 members,
                 name,
-                joinCode);
+                joinCode,
+                currencyCode);
     }
 
-    public static Wallet reconstitute(UUID walletId, UUID ownerId, LocalDateTime createdAt, Set<UUID> memberIds, String name, JoinCode joinCode) {
+    public static Wallet reconstitute(UUID walletId, UUID ownerId, LocalDateTime createdAt,
+                                      Set<UUID> memberIds, String name, JoinCode joinCode,
+                                      String currencyCode
+    ) {
         return new Wallet(
                 walletId,
                 ownerId,
                 createdAt,
                 memberIds,
                 name,
-                joinCode);
+                joinCode,
+                currencyCode);
     }
 
     public void join(UUID userId) {

@@ -3,15 +3,13 @@ package vlad.corp.money_manager_backend.presentation;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vlad.corp.money_manager_backend.application.wallet.CreateWalletResult;
-import vlad.corp.money_manager_backend.application.wallet.CreateWalletUseCase;
-import vlad.corp.money_manager_backend.application.wallet.GetMyMainWalletUserCase;
-import vlad.corp.money_manager_backend.application.wallet.JoinWalletByCodeUseCase;
+import vlad.corp.money_manager_backend.application.wallet.*;
 import vlad.corp.money_manager_backend.domain.model.Wallet;
-import vlad.corp.money_manager_backend.presentation.dto.CreateWalletRequest;
-import vlad.corp.money_manager_backend.presentation.dto.JoinWalletRequest;
-import vlad.corp.money_manager_backend.presentation.dto.WalletDto;
+import vlad.corp.money_manager_backend.presentation.dto.wallet.CreateWalletRequest;
+import vlad.corp.money_manager_backend.presentation.dto.wallet.JoinWalletRequest;
+import vlad.corp.money_manager_backend.presentation.dto.wallet.WalletDto;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -20,15 +18,17 @@ public class WalletController {
     
     private final CreateWalletUseCase createWalletUseCase;
     private final JoinWalletByCodeUseCase joinWalletByCodeUseCase;
-    private final GetMyMainWalletUserCase getMyMainWalletUserCase;
+    private final ListMyWalletsUseCase listMyWalletsUseCase;
+    private final GetWalletByIdUseCase getWalletByIdUseCase;
 
     public WalletController(
             CreateWalletUseCase createWalletUseCase,
-            JoinWalletByCodeUseCase joinWalletByCodeUseCase,
-            GetMyMainWalletUserCase getMyMainWalletUserCase) {
+            JoinWalletByCodeUseCase joinWalletByCodeUseCase, ListMyWalletsUseCase listMyWalletsUseCase, GetWalletByIdUseCase getWalletByIdUseCase
+    ) {
         this.createWalletUseCase = createWalletUseCase;
         this.joinWalletByCodeUseCase = joinWalletByCodeUseCase;
-        this.getMyMainWalletUserCase = getMyMainWalletUserCase;
+        this.listMyWalletsUseCase = listMyWalletsUseCase;
+        this.getWalletByIdUseCase = getWalletByIdUseCase;
     }
     
     @PostMapping
@@ -44,25 +44,36 @@ public class WalletController {
                 result.ownerId(),
                 result.name(),
                 result.joinCode(),
+                result.currencyCode(),
                 result.members(),
                 result.createdAt()
         );
     }
     
     @PostMapping("/join")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void join(
+    public UUID join(
             @RequestHeader("X-User-Id") UUID userId,
             @RequestBody JoinWalletRequest code
     ){
-        joinWalletByCodeUseCase.execute(userId, code.code());
+        return joinWalletByCodeUseCase.execute(userId, code.code());
     }
     
-    @GetMapping("/me")
-    public WalletDto myWallet(
+    @GetMapping("/myWallets")
+    public List<WalletDto> myWallets(
             @RequestHeader("X-User-Id") UUID userId
     ) {
-        return toDto(getMyMainWalletUserCase.execute(userId));
+        return listMyWalletsUseCase.execute(userId)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @GetMapping("/{walletId}")
+    public WalletDto getWalletById(
+            @RequestHeader("X-User-Id") UUID userId,
+            @PathVariable UUID walletId
+    ) {
+        return toDto(getWalletByIdUseCase.execute(userId, walletId));
     }
     
     private WalletDto toDto(Wallet wallet) {
@@ -71,6 +82,7 @@ public class WalletController {
                 wallet.getOwnerId(),
                 wallet.getName(),
                 wallet.getJoinCode().value(),
+                wallet.getCurrencyCode(),
                 wallet.getMembers(),
                 wallet.getCreatedAt()
         );

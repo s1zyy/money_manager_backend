@@ -20,6 +20,7 @@ import java.util.UUID;
 public class WalletEntity {
 
     @Id
+    @Column(name = "wallet_id")
     private UUID walletId;
 
     @Column(nullable = false)
@@ -30,6 +31,10 @@ public class WalletEntity {
 
     @Column(nullable = false, unique = true, length = 8)
     private String joinCode;
+
+    @Column(nullable = false, length = 3)
+    private String currencyCode;
+
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

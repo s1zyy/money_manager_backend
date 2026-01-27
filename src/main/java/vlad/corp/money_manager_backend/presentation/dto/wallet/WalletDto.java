@@ -1,4 +1,4 @@
-package vlad.corp.money_manager_backend.presentation.dto;
+package vlad.corp.money_manager_backend.presentation.dto.wallet;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -9,6 +9,8 @@ public record WalletDto(
         UUID ownerId,
         String name,
         String joinCode,
+        String currencyCode,
         Set<UUID> members,
         LocalDateTime createdAt
+
 ) {}

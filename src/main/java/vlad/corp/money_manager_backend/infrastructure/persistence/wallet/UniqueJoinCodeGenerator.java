@@ -20,7 +20,7 @@ public class UniqueJoinCodeGenerator implements JoinCodeGenerator {
     @Override
     public JoinCode generate() {
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            String code = String.format("%06d", random.nextInt(100_000_000));
+            String code = String.format("%08d", random.nextInt(100_000_000));
             JoinCode joinCode = JoinCode.of(code);
             if(walletRepository.findByJoinCode(joinCode).isEmpty()){
                 return joinCode;

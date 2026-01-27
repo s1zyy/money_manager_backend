@@ -2,14 +2,11 @@ package vlad.corp.money_manager_backend.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import vlad.corp.money_manager_backend.application.wallet.CreateWalletUseCase;
-import vlad.corp.money_manager_backend.application.wallet.GetMyMainWalletUserCase;
-import vlad.corp.money_manager_backend.application.wallet.JoinCodeGenerator;
-import vlad.corp.money_manager_backend.application.wallet.JoinWalletByCodeUseCase;
+import vlad.corp.money_manager_backend.application.wallet.*;
 import vlad.corp.money_manager_backend.domain.repository.WalletRepository;
 
 @Configuration
-public class UseCaseConfig {
+public class WalletUseCaseConfig {
 
     @Bean
     public CreateWalletUseCase createWalletUseCase(
@@ -25,7 +22,15 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public GetMyMainWalletUserCase getMyMainWalletUserCase(WalletRepository walletRepository) {
-        return new GetMyMainWalletUserCase(walletRepository);
+    public GetWalletByIdUseCase getWalletByIdUseCase(WalletRepository walletRepository) {
+        return new GetWalletByIdUseCase(walletRepository);
     }
+
+    @Bean
+    public ListMyWalletsUseCase listMyWalletsUseCase(WalletRepository walletRepository) {
+        return new ListMyWalletsUseCase(walletRepository);
+    }
+
+
+
 }

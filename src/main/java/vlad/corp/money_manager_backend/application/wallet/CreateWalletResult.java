@@ -9,8 +9,10 @@ public record CreateWalletResult(
         UUID ownerId,
         String name,
         String joinCode,
+        String currencyCode,
         Set<UUID> members,
         LocalDateTime createdAt
+
 
 ) {
 }

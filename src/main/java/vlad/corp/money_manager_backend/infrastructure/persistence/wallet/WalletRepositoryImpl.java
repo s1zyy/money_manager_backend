@@ -5,6 +5,7 @@ import vlad.corp.money_manager_backend.domain.model.JoinCode;
 import vlad.corp.money_manager_backend.domain.model.Wallet;
 import vlad.corp.money_manager_backend.domain.repository.WalletRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Repository
@@ -16,10 +17,6 @@ public class WalletRepositoryImpl implements WalletRepository {
         this.jpaRepository = jpaRepository;
     }
 
-    @Override
-    public Optional<Wallet> findByOwnerId(UUID ownerId) {
-        return jpaRepository.findByOwnerId(ownerId).map(this::toDomain);
-    }
 
     @Override
     public Optional<Wallet> findByJoinCode(JoinCode joinCode) {
@@ -31,6 +28,18 @@ public class WalletRepositoryImpl implements WalletRepository {
         jpaRepository.save(toEntity(wallet));
     }
 
+    @Override
+    public Optional<Wallet> findById(UUID walletId) {
+        Optional<WalletEntity> walletEntity = jpaRepository.findById(walletId);
+        return walletEntity.map(this::toDomain);
+    }
+
+    @Override
+    public List<Wallet> findByMemberId(UUID userId) {
+        List<WalletEntity> wallets = jpaRepository.findAllByMemberIdsContains(userId);
+        return wallets.stream().map(this::toDomain).toList();
+    }
+
     private Wallet toDomain(WalletEntity walletEntity) {
         return Wallet.reconstitute(
                 walletEntity.getWalletId(),
@@ -38,7 +47,9 @@ public class WalletRepositoryImpl implements WalletRepository {
                 walletEntity.getCreatedAt(),
                 walletEntity.getMemberIds(),
                 walletEntity.getName(),
-                JoinCode.of(walletEntity.getJoinCode())
+                JoinCode.of(walletEntity.getJoinCode()),
+                walletEntity.getCurrencyCode()
+
         );
     }
 
@@ -48,6 +59,7 @@ public class WalletRepositoryImpl implements WalletRepository {
                 .ownerId(wallet.getOwnerId())
                 .name(wallet.getName())
                 .joinCode(wallet.getJoinCode().value())
+                .currencyCode(wallet.getCurrencyCode())
                 .createdAt(wallet.getCreatedAt())
                 .memberIds(wallet.getMembers())
                 .build();
