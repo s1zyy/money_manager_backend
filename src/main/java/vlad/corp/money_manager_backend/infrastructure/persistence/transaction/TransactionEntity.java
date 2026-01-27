@@ -1,6 +1,7 @@
 package vlad.corp.money_manager_backend.infrastructure.persistence.transaction;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -9,11 +10,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,11 +25,25 @@ public class TransactionEntity {
     @Id
     private UUID id;
 
-    private Double amount;
+    @Column(nullable = false)
+    private UUID walletId;
 
+    @Column(nullable = false)
+    private BigDecimal amount;
+
+    @Column(nullable = false, length = 3)
+    private String currencyCode;
+
+    @Column(nullable = false)
     private String category;
 
-    private LocalDateTime dateTime;
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    @Column(nullable = false)
+    private UUID updatedBy;
+
+    private int version;
 
 
 }

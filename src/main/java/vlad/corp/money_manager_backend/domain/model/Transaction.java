@@ -15,25 +15,39 @@ public class Transaction {
     private final UUID walletId;
     private UUID updatedBy;
     private int version;
-    private Double amount;
+    private Money amount;
     private String category;
     private LocalDateTime updatedAt;
 
 
 
-    public Transaction(UUID id, Double amount, String category,
-                       LocalDateTime dateTime, UUID walletId, int version, UUID updatedBy) {
+    public Transaction(UUID id, UUID walletId, Money amount,
+                       String category, LocalDateTime updatedAt, int version, UUID updatedBy){
         this.transactionId = id;
         this.walletId = walletId;
         this.amount = amount;
         this.category = category;
-        this.updatedAt = dateTime;
+        this.updatedAt = updatedAt;
         this.version = version;
         this.updatedBy = updatedBy;
     }
 
+    public static Transaction create(
+            UUID walletId, UUID createdBy, Money amount, String category
+            ){
+        return new Transaction(
+                UUID.randomUUID(),
+                walletId,
+                amount,
+                category,
+                LocalDateTime.now(),
+                1,
+                createdBy
+        );
+    }
+
     public void update(
-            Double newAmount,
+            Money newAmount,
             String newCategory,
             UUID editorUserId,
             int expectedVersion
@@ -46,9 +60,6 @@ public class Transaction {
             );
         }
 
-        if(!this.updatedBy.equals(editorUserId) && !this.walletId.equals(editorUserId)) {
-            //throw new UnauthorizedException("User cannot update this transaction");
-        }
         this.amount = newAmount;
         this.category = newCategory;
         this.version++;
