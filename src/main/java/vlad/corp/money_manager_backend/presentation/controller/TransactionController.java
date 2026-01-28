@@ -1,4 +1,4 @@
-package vlad.corp.money_manager_backend.presentation;
+package vlad.corp.money_manager_backend.presentation.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
