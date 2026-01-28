@@ -1,11 +1,8 @@
 package vlad.corp.money_manager_backend.domain.model;
 
-
 import vlad.corp.money_manager_backend.domain.exception.VersionConflictException;
-
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
-
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,7 +17,7 @@ public class TransactionTest {
                 UUID.randomUUID(),
                 null,
                 null,
-                LocalDateTime.now(),
+                Instant.now(),
                 2,
                 UUID.randomUUID()
         );

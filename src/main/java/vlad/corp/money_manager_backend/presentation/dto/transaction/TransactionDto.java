@@ -1,7 +1,7 @@
 package vlad.corp.money_manager_backend.presentation.dto.transaction;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 public record TransactionDto(
@@ -12,5 +12,5 @@ public record TransactionDto(
         String category,
         int version,
         UUID updatedBy,
-        LocalDateTime dateTime
+        Instant updatedAt
 ){}

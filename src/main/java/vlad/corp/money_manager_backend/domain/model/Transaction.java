@@ -1,11 +1,8 @@
 package vlad.corp.money_manager_backend.domain.model;
 
-
-
 import lombok.Getter;
 import vlad.corp.money_manager_backend.domain.exception.VersionConflictException;
-
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -17,12 +14,12 @@ public class Transaction {
     private int version;
     private Money amount;
     private String category;
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
 
 
     public Transaction(UUID id, UUID walletId, Money amount,
-                       String category, LocalDateTime updatedAt, int version, UUID updatedBy){
+                       String category, Instant updatedAt, int version, UUID updatedBy){
         this.transactionId = id;
         this.walletId = walletId;
         this.amount = amount;
@@ -40,7 +37,7 @@ public class Transaction {
                 walletId,
                 amount,
                 category,
-                LocalDateTime.now(),
+                Instant.now(),
                 1,
                 createdBy
         );
@@ -63,7 +60,7 @@ public class Transaction {
         this.amount = newAmount;
         this.category = newCategory;
         this.version++;
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = Instant.now();
         this.updatedBy = editorUserId;
     }
 
