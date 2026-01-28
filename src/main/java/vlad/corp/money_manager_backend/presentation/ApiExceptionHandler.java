@@ -8,19 +8,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import vlad.corp.money_manager_backend.application.exception.AccessDeniedException;
 import vlad.corp.money_manager_backend.application.exception.NotFoundException;
 import vlad.corp.money_manager_backend.domain.exception.VersionConflictException;
-
-import java.util.UUID;
+import vlad.corp.money_manager_backend.presentation.dto.VersionConflictResponse;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
     public record ErrorResponse(String message) {}
 
-    public record VersionConflictResponse(
-            UUID transactionId,
-            int currentVersion,
-            int expectedVersion
-    ){}
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -35,6 +29,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(VersionConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT) // 409
     public VersionConflictResponse handleVersionConflictException(VersionConflictException ex){
         return new VersionConflictResponse(
                 ex.getTransactionId(),
