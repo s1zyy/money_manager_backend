@@ -64,4 +64,17 @@ public class Transaction {
         this.updatedBy = editorUserId;
     }
 
+    public TransactionSnapshot snapshot(){
+        return new TransactionSnapshot(
+                this.transactionId,
+                this.walletId,
+                this.updatedBy,
+                this.version,
+                this.amount.amount(),
+                this.amount.currency().getCurrencyCode(),
+                this.category,
+                this.updatedAt
+        );
+    }
+
 }
