@@ -13,10 +13,14 @@ import vlad.corp.money_manager_backend.application.transaction.AddTransactionUse
 import vlad.corp.money_manager_backend.application.transaction.ListTransactionsByWalletUseCase;
 import vlad.corp.money_manager_backend.application.transaction.UpdateTransactionUseCase;
 import vlad.corp.money_manager_backend.domain.exception.VersionConflictException;
+import vlad.corp.money_manager_backend.domain.model.ClientAttemptSnapshot;
+import vlad.corp.money_manager_backend.domain.model.TransactionSnapshot;
 import vlad.corp.money_manager_backend.presentation.controller.TransactionController;
 import vlad.corp.money_manager_backend.presentation.dto.transaction.UpdateTransactionRequest;
+import vlad.corp.money_manager_backend.presentation.mapper.TransactionConflictMapper;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -30,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(TransactionController.class)
-@Import(ApiExceptionHandler.class)
+@Import({ApiExceptionHandler.class, TransactionConflictMapper.class})
 public class TransactionControllerConflictMockMvcTest {
 
     @Autowired
@@ -54,8 +58,29 @@ public class TransactionControllerConflictMockMvcTest {
         int currentVersion = 3;
         int expectedVersion = 2;
 
+        TransactionSnapshot serverSnapshot = new TransactionSnapshot(
+                transactionId,
+                UUID.randomUUID(), // walletId
+                UUID.randomUUID(), // updatedBy
+                currentVersion,
+                BigDecimal.valueOf(100),
+                "USD",
+                "Food",
+                Instant.now()
+        );
+        ClientAttemptSnapshot clientSnapshot = new ClientAttemptSnapshot(
+                BigDecimal.valueOf(120),
+                "Groceries",
+                expectedVersion
+        );
+
+
+
         VersionConflictException ex =
                 new VersionConflictException(transactionId, currentVersion, expectedVersion);
+
+        ex.attachTransactionSnapshot(serverSnapshot);
+        ex.attachClientAttemptSnapshot(clientSnapshot);
 
         doThrow(ex).when(updateTransactionUseCase).execute(any(UUID.class), any(UUID.class), any(BigDecimal.class), any(String.class), anyInt());
 
@@ -76,9 +101,13 @@ public class TransactionControllerConflictMockMvcTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.transactionId").value(transactionId.toString()))
                 .andExpect(jsonPath("$.currentVersion").value(currentVersion))
-                .andExpect(jsonPath("$.expectedVersion").value(expectedVersion));
+                .andExpect(jsonPath("$.expectedVersion").value(expectedVersion))
+                .andExpect(jsonPath("$.serverTransaction.transactionId").value(transactionId.toString()))
+                .andExpect(jsonPath("$.serverTransaction.amount").value(100.00))
+                .andExpect(jsonPath("$.serverTransaction.category").value("Food"))
+                .andExpect(jsonPath("$.clientTransaction.amount").value(120.00))
+                .andExpect(jsonPath("$.clientTransaction.category").value("Groceries"));
 
 
     }
-
 }
