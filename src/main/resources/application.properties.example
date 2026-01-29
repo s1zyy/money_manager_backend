@@ -1,0 +1,5 @@
+spring.application.name=money_manager_backend
+
+security.jwt.secret= your_jwt_secret_key_here
+
+security.jwt.ttl-seconds=3600
