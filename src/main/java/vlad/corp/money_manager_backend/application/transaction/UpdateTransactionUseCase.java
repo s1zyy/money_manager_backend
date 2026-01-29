@@ -2,6 +2,8 @@ package vlad.corp.money_manager_backend.application.transaction;
 
 import vlad.corp.money_manager_backend.application.exception.AccessDeniedException;
 import vlad.corp.money_manager_backend.application.exception.NotFoundException;
+import vlad.corp.money_manager_backend.domain.exception.VersionConflictException;
+import vlad.corp.money_manager_backend.domain.model.ClientAttemptSnapshot;
 import vlad.corp.money_manager_backend.domain.model.Money;
 import vlad.corp.money_manager_backend.domain.model.Transaction;
 import vlad.corp.money_manager_backend.domain.model.Wallet;
@@ -27,16 +29,26 @@ public class UpdateTransactionUseCase {
         Wallet wallet = walletRepository.findById(transaction.getWalletId())
                 .orElseThrow(() -> new NotFoundException("Wallet not found with this id"));
 
+        ClientAttemptSnapshot attempt = new ClientAttemptSnapshot(
+                amount,
+                category,
+                expectedVersion
+        );
+
         if(!wallet.isMember(userId)){
             throw new AccessDeniedException("User is not a member of this wallet");
         }
-
-        transaction.update(
-                Money.of(amount, wallet.getCurrencyCode()),
-                category,
-                userId,
-                expectedVersion);
-
+        try {
+            transaction.update(
+                    Money.of(amount, wallet.getCurrencyCode()),
+                    category,
+                    userId,
+                    expectedVersion);
+        } catch (VersionConflictException ex) {
+            ex.attachClientAttemptSnapshot(attempt);
+            ex.attachTransactionSnapshot(transaction.snapshot());
+            throw ex;
+        }
         return transactionRepository.save(transaction);
     }
 }

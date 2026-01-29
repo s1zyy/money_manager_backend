@@ -8,10 +8,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import vlad.corp.money_manager_backend.application.exception.AccessDeniedException;
 import vlad.corp.money_manager_backend.application.exception.NotFoundException;
 import vlad.corp.money_manager_backend.domain.exception.VersionConflictException;
-import vlad.corp.money_manager_backend.presentation.dto.VersionConflictResponse;
+import vlad.corp.money_manager_backend.presentation.dto.conflict.VersionConflictResponse;
+import vlad.corp.money_manager_backend.presentation.mapper.TransactionConflictMapper;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+    private final TransactionConflictMapper conflictMapper;
+
+    public ApiExceptionHandler(TransactionConflictMapper transactionConflictMapper) {
+        this.conflictMapper = transactionConflictMapper;
+    }
 
     public record ErrorResponse(String message) {}
 
@@ -31,10 +38,6 @@ public class ApiExceptionHandler {
     @ExceptionHandler(VersionConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT) // 409
     public VersionConflictResponse handleVersionConflictException(VersionConflictException ex){
-        return new VersionConflictResponse(
-                ex.getTransactionId(),
-                ex.getCurrentVersion(),
-                ex.getExpectedVersion()
-        );
+        return conflictMapper.toResponse(ex);
     }
 }
