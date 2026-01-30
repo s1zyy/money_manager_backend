@@ -23,20 +23,20 @@ public class WalletEntity {
     @Column(name = "wallet_id")
     private UUID walletId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "owner_id")
     private UUID ownerId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "name")
     private String name;
 
-    @Column(nullable = false, unique = true, length = 8)
+    @Column(nullable = false, unique = true, length = 8, name = "join_code")
     private String joinCode;
 
-    @Column(nullable = false, length = 3)
+    @Column(nullable = false, length = 3, name = "currency_code")
     private String currencyCode;
 
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
 
     @ElementCollection(fetch = FetchType.EAGER)

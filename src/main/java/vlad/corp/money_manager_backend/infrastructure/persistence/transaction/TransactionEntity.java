@@ -22,27 +22,28 @@ import java.util.UUID;
 public class TransactionEntity {
 
     @Id
+    @Column(name = "transaction_id", nullable = false)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "wallet_id")
     private UUID walletId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "amount")
     private BigDecimal amount;
 
-    @Column(nullable = false, length = 3)
+    @Column(nullable = false, length = 3, name = "currency_code")
     private String currencyCode;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "category")
     private String category;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "updated_at")
     private Instant updatedAt;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "updated_by")
     private UUID updatedBy;
 
+    @Column(name = "version", nullable = false)
     private int version;
-
 
 }
