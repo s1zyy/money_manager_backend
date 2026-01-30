@@ -2,9 +2,11 @@ package vlad.corp.money_manager_backend.presentation.controller;
 
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vlad.corp.money_manager_backend.application.wallet.*;
 import vlad.corp.money_manager_backend.domain.model.Wallet;
+import vlad.corp.money_manager_backend.infrastructure.security.AuthenticatedUser;
 import vlad.corp.money_manager_backend.presentation.dto.wallet.CreateWalletRequest;
 import vlad.corp.money_manager_backend.presentation.dto.wallet.JoinWalletRequest;
 import vlad.corp.money_manager_backend.presentation.dto.wallet.WalletDto;
@@ -34,10 +36,10 @@ public class WalletController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public WalletDto create(
-            @RequestHeader("X-User-Id") UUID userId,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @RequestBody CreateWalletRequest request
     ) {
-        CreateWalletResult result = createWalletUseCase.execute(userId, request.name());
+        CreateWalletResult result = createWalletUseCase.execute(user.userId(), request.name());
 
         return new WalletDto(
                 result.walletId(),
@@ -52,17 +54,17 @@ public class WalletController {
     
     @PostMapping("/join")
     public UUID join(
-            @RequestHeader("X-User-Id") UUID userId,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @RequestBody JoinWalletRequest code
     ){
-        return joinWalletByCodeUseCase.execute(userId, code.code());
+        return joinWalletByCodeUseCase.execute(user.userId(), code.code());
     }
     
     @GetMapping("/myWallets")
     public List<WalletDto> myWallets(
-            @RequestHeader("X-User-Id") UUID userId
+            @AuthenticationPrincipal AuthenticatedUser user
     ) {
-        return listMyWalletsUseCase.execute(userId)
+        return listMyWalletsUseCase.execute(user.userId())
                 .stream()
                 .map(this::toDto)
                 .toList();
@@ -70,10 +72,10 @@ public class WalletController {
 
     @GetMapping("/{walletId}")
     public WalletDto getWalletById(
-            @RequestHeader("X-User-Id") UUID userId,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @PathVariable UUID walletId
     ) {
-        return toDto(getWalletByIdUseCase.execute(userId, walletId));
+        return toDto(getWalletByIdUseCase.execute(user.userId(), walletId));
     }
     
     private WalletDto toDto(Wallet wallet) {
