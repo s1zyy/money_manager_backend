@@ -2,8 +2,10 @@ package vlad.corp.money_manager_backend.application.auth;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import vlad.corp.money_manager_backend.application.auth.port.TokenGenerator;
+import vlad.corp.money_manager_backend.application.exception.InvalidCredentialsException;
 import vlad.corp.money_manager_backend.domain.model.User;
 import vlad.corp.money_manager_backend.domain.repository.UserRepository;
+import java.util.List;
 
 
 public class LoginUseCase {
@@ -19,10 +21,10 @@ public class LoginUseCase {
 
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(InvalidCredentialsException::new);
         if(!passwordEncoder.matches(password, user.getPasswordHash())) {
-            throw new RuntimeException("Invalid email or password");
+            throw new InvalidCredentialsException();
         }
-        return tokenGenerator.generateToken(user);
+        return tokenGenerator.generateToken(user, List.of("ROLE_USER"));
     }
 }

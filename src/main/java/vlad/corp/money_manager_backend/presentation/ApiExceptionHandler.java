@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import vlad.corp.money_manager_backend.application.exception.AccessDeniedException;
+import vlad.corp.money_manager_backend.application.exception.InvalidCredentialsException;
 import vlad.corp.money_manager_backend.application.exception.NotFoundException;
+import vlad.corp.money_manager_backend.application.exception.UserAlreadyExistsException;
 import vlad.corp.money_manager_backend.domain.exception.VersionConflictException;
 import vlad.corp.money_manager_backend.presentation.dto.conflict.VersionConflictResponse;
 import vlad.corp.money_manager_backend.presentation.mapper.TransactionConflictMapper;
@@ -39,5 +41,23 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT) // 409
     public VersionConflictResponse handleVersionConflictException(VersionConflictException ex){
         return conflictMapper.toResponse(ex);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleInvalidCredentialsException(InvalidCredentialsException ex){
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleUserAlreadyExistsException(UserAlreadyExistsException ex){
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleGeneric(Exception ex){
+        return new ErrorResponse("Internal server error");
     }
 }

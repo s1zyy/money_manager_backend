@@ -2,9 +2,10 @@ package vlad.corp.money_manager_backend.application.auth;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import vlad.corp.money_manager_backend.application.auth.port.TokenGenerator;
+import vlad.corp.money_manager_backend.application.exception.UserAlreadyExistsException;
 import vlad.corp.money_manager_backend.domain.model.User;
 import vlad.corp.money_manager_backend.domain.repository.UserRepository;
-
+import java.util.List;
 import java.util.UUID;
 
 public class RegisterUseCase {
@@ -21,11 +22,11 @@ public class RegisterUseCase {
 
     public String register(String email, String password) {
         if(userRepository.findByEmail(email).isPresent()) {
-            throw new RuntimeException("Email already in use");
+            throw new UserAlreadyExistsException(email);
         }
         User user = new User(UUID.randomUUID(), email, passwordEncoder.encode(password));
         userRepository.save(user);
-        return tokenGenerator.generateToken(user);
+        return tokenGenerator.generateToken(user, List.of("ROLE_USER"));
 
 
     }
