@@ -1,5 +1,14 @@
 spring.application.name=money_manager_backend
 
 security.jwt.secret= your_jwt_secret_key_here
-
 security.jwt.ttl-seconds=3600
+
+spring.datasource.url= your_database_url_here
+spring.datasource.username= your_database_username_here
+spring.datasource.password= your_database_password_here
+spring.jpa.hibernate.ddl-auto=validate (use 'update' for development)
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+spring.flyway.enabled=true
+spring.flyway.locations=classpath:db/migration
