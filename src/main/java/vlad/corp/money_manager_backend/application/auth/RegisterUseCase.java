@@ -2,9 +2,8 @@ package vlad.corp.money_manager_backend.application.auth;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import vlad.corp.money_manager_backend.application.auth.port.TokenGenerator;
-import vlad.corp.money_manager_backend.application.exception.UserAlreadyExistsException;
 import vlad.corp.money_manager_backend.domain.model.User;
-import vlad.corp.money_manager_backend.domain.repository.UserRepository;
+
 import java.util.List;
 import java.util.UUID;
 

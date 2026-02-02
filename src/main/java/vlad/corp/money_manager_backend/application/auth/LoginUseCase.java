@@ -4,7 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import vlad.corp.money_manager_backend.application.auth.port.TokenGenerator;
 import vlad.corp.money_manager_backend.application.exception.InvalidCredentialsException;
 import vlad.corp.money_manager_backend.domain.model.User;
-import vlad.corp.money_manager_backend.domain.repository.UserRepository;
+
 import java.util.List;
 
 
