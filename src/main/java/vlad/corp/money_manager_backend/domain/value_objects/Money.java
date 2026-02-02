@@ -2,7 +2,6 @@ package vlad.corp.money_manager_backend.domain.value_objects;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Currency;
 import java.util.Objects;
 
 public record Money(BigDecimal amount) {

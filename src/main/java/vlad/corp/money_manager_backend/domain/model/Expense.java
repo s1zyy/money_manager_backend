@@ -2,10 +2,8 @@ package vlad.corp.money_manager_backend.domain.model;
 
 import lombok.Getter;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
-
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Getter

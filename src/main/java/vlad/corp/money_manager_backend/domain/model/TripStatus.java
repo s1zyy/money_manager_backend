@@ -1,0 +1,6 @@
+package vlad.corp.money_manager_backend.domain.model;
+
+public enum TripStatus {
+    ACTIVE,
+    ARCHIVED
+}
