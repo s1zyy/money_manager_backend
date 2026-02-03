@@ -41,14 +41,13 @@ public class AddExpenseUseCase {
 
         Expense expense =  new Expense(
                 UUID.randomUUID(),
+                tripId,
                 amount,
                 payerId,
                 participants.stream().toList(),
                 LocalDate.now(clock),
                 description
         );
-        trip.getExpenseIds().add(expense.getId());
-        tripRepository.save(trip);
         expenseRepository.save(expense);
         return expense;
     }

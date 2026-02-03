@@ -22,6 +22,7 @@ public class UpdateExpenseUseCase {
 
         Expense updatedExpense = new Expense(
                 expense.getId(),
+                expense.getTripId(),
                 newAmount != null ? newAmount : expense.getAmount(),
                 expense.getPayerId(),
                 newParticipants != null ? newParticipants : expense.getParticipantIds(),

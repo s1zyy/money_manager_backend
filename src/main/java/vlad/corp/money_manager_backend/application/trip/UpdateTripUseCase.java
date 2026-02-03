@@ -36,7 +36,6 @@ public class UpdateTripUseCase {
                 totalBudget != null ? totalBudget : trip.getTotalBudget(),
                 prepaidExpenses != null ? prepaidExpenses : trip.getPrepaidExpenses(),
                 participantIds != null ? participantIds : trip.getParticipantIds(),
-                trip.getExpenseIds(),
                 trip.getJoinCode()
         );
         return updatedTrip;

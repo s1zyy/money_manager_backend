@@ -21,12 +21,11 @@ public class DeleteExpenseUseCase {
     public void execute(UUID tripId, UUID expenseId) {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new NotFoundException("Trip not found with id: " + tripId));
+        trip.ensureNotArchived();
 
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new NotFoundException("Expense not found with id: " + expenseId));
 
-        trip.getExpenseIds().remove(expenseId);
-        tripRepository.save(trip);
         expenseRepository.delete(expense);
     }
 }

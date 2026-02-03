@@ -1,5 +1,6 @@
 package vlad.corp.money_manager_backend.application.trip;
 
+import vlad.corp.money_manager_backend.application.port.JoinCodeGenerator;
 import vlad.corp.money_manager_backend.domain.model.JoinCode;
 import vlad.corp.money_manager_backend.domain.model.Trip;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
@@ -12,9 +13,11 @@ import java.util.UUID;
 
 public class CreateTripUseCase {
     private final TripRepository tripRepository;
+    private final JoinCodeGenerator joinCodeGenerator;
 
-    public CreateTripUseCase(TripRepository tripRepository) {
+    public CreateTripUseCase(TripRepository tripRepository, JoinCodeGenerator joinCodeGenerator) {
         this.tripRepository = tripRepository;
+        this.joinCodeGenerator = joinCodeGenerator;
     }
 
     public Trip execute(
@@ -23,14 +26,12 @@ public class CreateTripUseCase {
             Money prepaidExpenses,
             UUID creatorId,
             LocalDate startDate,
-            LocalDate endDate,
-            String joinCode
+            LocalDate endDate
     ) {
+        JoinCode joinCode = joinCodeGenerator.generate();
 
         List<UUID> participantIds = new ArrayList<>();
         participantIds.add(creatorId);
-
-        List<UUID> expenseIds = new ArrayList<>();
 
         Trip trip = new Trip(
                 UUID.randomUUID(),
@@ -41,9 +42,7 @@ public class CreateTripUseCase {
                 totalBudget,
                 prepaidExpenses,
                 participantIds,
-                expenseIds,
-                new JoinCode(joinCode)
-
+                joinCode
         );
 
         tripRepository.save(trip);
