@@ -10,28 +10,40 @@ import java.util.UUID;
 
 @Repository
 public class ParticipantRepositoryImpl implements ParticipantRepository {
+    private final ParticipantJpaRepository jpaRepository;
+    private final ParticipantMapper participantMapper;
+
+    public ParticipantRepositoryImpl(ParticipantJpaRepository jpaRepository, ParticipantMapper participantMapper) {
+        this.jpaRepository = jpaRepository;
+        this.participantMapper = participantMapper;
+    }
+
     @Override
     public void save(Participant participant) {
-
+        jpaRepository.save(participantMapper.toEntity(participant));
     }
 
     @Override
     public Optional<Participant> findByEmail(String email) {
-        return Optional.empty();
+        return jpaRepository.findByEmail(email).map(participantMapper::toDomain);
     }
 
     @Override
     public void delete(Participant participant) {
+        jpaRepository.delete(participantMapper.toEntity(participant));
 
     }
 
     @Override
     public Optional<Participant> findById(UUID id) {
-        return Optional.empty();
+        return jpaRepository.findById(id).map(participantMapper::toDomain);
     }
 
     @Override
     public List<Participant> findAll() {
-        return List.of();
+        return jpaRepository.findAll()
+                .stream()
+                .map(participantMapper::toDomain)
+                .toList();
     }
 }

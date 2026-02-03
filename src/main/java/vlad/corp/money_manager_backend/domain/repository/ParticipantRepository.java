@@ -11,4 +11,5 @@ public interface ParticipantRepository {
     Optional<Participant> findByEmail(String email);
     Optional<Participant> findById(UUID id);
     List<Participant> findAll();
+    void delete(Participant participant);
 }

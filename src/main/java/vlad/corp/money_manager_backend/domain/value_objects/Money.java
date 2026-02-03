@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+
 public record Money(BigDecimal amount) {
     public Money {
         Objects.requireNonNull(amount, "amount must not be null");
@@ -32,5 +33,9 @@ public record Money(BigDecimal amount) {
         return new Money(
                 this.amount.divide(divisor, 2,  RoundingMode.DOWN)
         );
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
     }
 }

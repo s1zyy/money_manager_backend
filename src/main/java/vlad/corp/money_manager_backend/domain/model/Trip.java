@@ -20,11 +20,10 @@ public class Trip {
     private final Money totalBudget;
     private final Money prepaidExpenses;
     private final List<UUID> participantIds;
-    private final List<UUID> expenseIds;
     private final JoinCode joinCode;
     private TripStatus status;
 
-    public Trip(UUID id, UUID ownerId, String name, LocalDate startDate, LocalDate endDate, Money totalBudget, Money prepaidExpenses, List<UUID> participantIds, List<UUID> expenseIds, JoinCode joinCode) {
+    public Trip(UUID id, UUID ownerId, String name, LocalDate startDate, LocalDate endDate, Money totalBudget, Money prepaidExpenses, List<UUID> participantIds, JoinCode joinCode) {
         this.id = id;
         this.ownerId = ownerId;
         this.name = name;
@@ -33,7 +32,6 @@ public class Trip {
         this.totalBudget = totalBudget;
         this.prepaidExpenses = prepaidExpenses;
         this.participantIds = participantIds;
-        this.expenseIds = expenseIds;
         this.joinCode = joinCode;
     }
 

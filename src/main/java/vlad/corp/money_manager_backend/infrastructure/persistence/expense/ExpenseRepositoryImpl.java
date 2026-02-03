@@ -3,35 +3,48 @@ package vlad.corp.money_manager_backend.infrastructure.persistence.expense;
 import org.springframework.stereotype.Repository;
 import vlad.corp.money_manager_backend.domain.model.Expense;
 import vlad.corp.money_manager_backend.domain.repository.ExpenseRepository;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public class ExpenseRepositoryImpl implements ExpenseRepository {
+    private final ExpenseJpaRepository jpaRepository;
+    private final ExpenseMapper expenseMapper;
+
+    public ExpenseRepositoryImpl(ExpenseJpaRepository jpaRepository, ExpenseMapper expenseMapper) {
+        this.jpaRepository = jpaRepository;
+        this.expenseMapper = expenseMapper;
+    }
+
     @Override
     public void save(Expense expense) {
-
+        jpaRepository.save(expenseMapper.toEntity(expense));
     }
 
     @Override
     public void delete(Expense expense) {
-
+        jpaRepository.delete(expenseMapper.toEntity(expense));
     }
 
     @Override
     public Optional<Expense> findById(UUID id) {
-        return Optional.empty();
+        return jpaRepository.findById(id).map(expenseMapper::toDomain);
     }
 
     @Override
-    public List<Expense> finaAll() {
-        return List.of();
+    public List<Expense> findAll() {
+        return jpaRepository.findAll()
+                .stream()
+                .map(expenseMapper::toDomain)
+                .toList();
     }
 
     @Override
     public List<Expense> findAllByTripId(UUID id) {
-        return List.of();
+        return jpaRepository.findAllByTripId(id)
+                .stream()
+                .map(expenseMapper::toDomain)
+                .toList();
     }
 }
