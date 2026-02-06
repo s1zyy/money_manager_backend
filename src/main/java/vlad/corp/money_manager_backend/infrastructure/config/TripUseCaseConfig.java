@@ -13,6 +13,11 @@ import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 public class TripUseCaseConfig {
 
     @Bean
+    public LeaveTripUseCase leaveTripUseCase(TripRepository tripRepository) {
+        return new LeaveTripUseCase(tripRepository);
+    }
+
+    @Bean
     public ArchiveTripUseCase archiveTripUseCase(TripRepository tripRepository) {
         return new ArchiveTripUseCase(tripRepository);
     }
@@ -43,5 +48,10 @@ public class TripUseCaseConfig {
     @Bean
     public ListMyTripsUseCase listMyTripsUseCase(TripRepository tripRepository) {
         return new ListMyTripsUseCase(tripRepository);
+    }
+
+    @Bean
+    public GetTripUseCase getTripUseCase(TripRepository tripRepository) {
+        return new GetTripUseCase(tripRepository);
     }
 }

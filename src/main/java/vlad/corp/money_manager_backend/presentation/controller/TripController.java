@@ -24,8 +24,10 @@ public class TripController {
     private final TripMapperDto tripMapperDto;
     private final TripDashboardMapper tripDashboardMapper;
     private final ArchiveTripUseCase archiveTripUseCase;
+    private final LeaveTripUseCase leaveTripUseCase;
+    private final GetTripUseCase getTripUseCase;
 
-    public TripController(JoinTripUseCase joinTripUseCase, GetTripDashboardUseCase getTripDashboardUseCase, UpdateTripUseCase updateTripUseCase, CreateTripUseCase createTripUseCase, ListMyTripsUseCase listMyTripsUseCase, TripMapperDto tripMapperDto, TripDashboardMapper tripDashboardMapper, ArchiveTripUseCase archiveTripUseCase) {
+    public TripController(JoinTripUseCase joinTripUseCase, GetTripDashboardUseCase getTripDashboardUseCase, UpdateTripUseCase updateTripUseCase, CreateTripUseCase createTripUseCase, ListMyTripsUseCase listMyTripsUseCase, TripMapperDto tripMapperDto, TripDashboardMapper tripDashboardMapper, ArchiveTripUseCase archiveTripUseCase, LeaveTripUseCase leaveTripUseCase, GetTripUseCase getTripUseCase) {
         this.joinTripUseCase = joinTripUseCase;
         this.getTripDashboardUseCase = getTripDashboardUseCase;
         this.updateTripUseCase = updateTripUseCase;
@@ -34,6 +36,8 @@ public class TripController {
         this.tripMapperDto = tripMapperDto;
         this.tripDashboardMapper = tripDashboardMapper;
         this.archiveTripUseCase = archiveTripUseCase;
+        this.leaveTripUseCase = leaveTripUseCase;
+        this.getTripUseCase = getTripUseCase;
     }
 
     @PostMapping
@@ -69,6 +73,24 @@ public class TripController {
         return joinTripUseCase.execute(request.code(), participant.participantId());
     }
 
+    @PostMapping("/{tripId}/archive")
+    public TripDto archiveTrip(
+            @AuthenticationPrincipal AuthenticatedParticipant participant,
+            @PathVariable UUID tripId
+    ) {
+        Trip trip =  archiveTripUseCase.execute(tripId, participant.participantId());
+        return tripMapperDto.toDto(trip);
+    }
+
+    @PostMapping("/{tripId}/leave")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void leaveTrip(
+            @AuthenticationPrincipal AuthenticatedParticipant participant,
+            @PathVariable UUID tripId
+    ) {
+        leaveTripUseCase.execute(tripId, participant.participantId());
+    }
+
     @GetMapping
     public List<TripDto> getUserTrips(
             @AuthenticationPrincipal AuthenticatedParticipant participant
@@ -85,23 +107,33 @@ public class TripController {
             @AuthenticationPrincipal AuthenticatedParticipant participant,
             @PathVariable UUID tripId
     ){
-        TripDashboard dashboard = getTripDashboardUseCase.execute(tripId);
+        TripDashboard dashboard = getTripDashboardUseCase.execute(tripId, participant.participantId());
         return tripDashboardMapper.toDto(dashboard);
     }
 
-//    @PutMapping("/{tripId}")
-//    public TripDto updateTrip(
-//            @AuthenticationPrincipal AuthenticatedParticipant participant,
-//            @PathVariable UUID tripId,
-//            @RequestBody UpdateTripRequest request) {
-//        Trip updatedTrip = updateTripUseCase.execute(
-//                tripId,
-//                request.name(),
-//                request.totalBudget(),
-//                request.prepaidExpenses(),
-//                request.participantIds()
-//    }
+    @GetMapping("/{tripId}")
+    public TripDto getTrip(
+            @AuthenticationPrincipal AuthenticatedParticipant participant,
+            @PathVariable UUID tripId
+    ) {
+        Trip trip =  getTripUseCase.execute(tripId, participant.participantId());
+        return tripMapperDto.toDto(trip);
+    }
 
-
-
+    @PutMapping("/{tripId}")
+    public TripDto updateTrip(
+            @AuthenticationPrincipal AuthenticatedParticipant participant,
+            @PathVariable UUID tripId,
+            @RequestBody UpdateTripRequest request) {
+        Trip updatedTrip = updateTripUseCase.execute(
+                participant.participantId(),
+                tripId,
+                request.name(),
+                request.budget(),
+                request.prepaidExpenses(),
+                request.participantIds(),
+                request.startDate(),
+                request.endDate());
+        return tripMapperDto.toDto(updatedTrip);
+    }
 }

@@ -6,20 +6,17 @@ import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 
 import java.util.UUID;
 
-public class ArchiveTripUseCase {
-
+public class GetTripUseCase {
     private final TripRepository tripRepository;
 
-    public ArchiveTripUseCase(TripRepository tripRepository) {
+    public GetTripUseCase(TripRepository tripRepository) {
         this.tripRepository = tripRepository;
     }
 
     public Trip execute(UUID tripId, UUID userId) {
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new NotFoundException("Trip not found with id: " + tripId));
-        trip.ensureNotArchived();
-        trip.archive(userId);
-        tripRepository.save(trip);
+        Trip trip =  tripRepository.findById(tripId)
+                .orElseThrow(() -> new NotFoundException("Trip with id " + tripId + " not found"));
+        trip.ensureParticipant(userId);
         return trip;
     }
 }

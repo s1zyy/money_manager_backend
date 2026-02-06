@@ -3,6 +3,7 @@ package vlad.corp.money_manager_backend.application.trip;
 import vlad.corp.money_manager_backend.application.port.JoinCodeGenerator;
 import vlad.corp.money_manager_backend.domain.model.JoinCode;
 import vlad.corp.money_manager_backend.domain.model.Trip;
+import vlad.corp.money_manager_backend.domain.model.TripStatus;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
 import java.math.BigDecimal;
@@ -45,7 +46,8 @@ public class CreateTripUseCase {
                 totalBudgetMoney,
                 prepaidExpensesMoney,
                 participantIds,
-                joinCode
+                joinCode,
+                TripStatus.ACTIVE
         );
         tripRepository.save(trip);
         return trip;

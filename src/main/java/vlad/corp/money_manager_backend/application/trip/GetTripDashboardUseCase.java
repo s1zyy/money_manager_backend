@@ -27,9 +27,11 @@ public class GetTripDashboardUseCase {
         this.calculateBalancesUseCase = calculateBalancesUseCase;
     }
 
-    public TripDashboard execute (UUID tripId) {
+    public TripDashboard execute (UUID tripId, UUID participantId) {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new NotFoundException("Trip not found"));
+
+        trip.ensureParticipant(participantId);
 
         List<Expense> expenses = expenseRepository.findAllByTripId(tripId);
 

@@ -22,7 +22,7 @@ public class RegisterUseCase {
 
     public String register(String email, String password, String name) {
         if(participantRepository.findByEmail(email).isPresent()) {
-            throw new ParticipantAlreadyExistException(email);
+            throw new ParticipantAlreadyExistException("Participant with email " + email + " already exists");
         }
         Participant participant = new Participant(UUID.randomUUID(), name, email, passwordEncoder.encode(password));
         participantRepository.save(participant);
