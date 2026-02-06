@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import vlad.corp.money_manager_backend.application.auth.LoginUseCase;
 import vlad.corp.money_manager_backend.application.auth.RegisterUseCase;
 import vlad.corp.money_manager_backend.application.auth.port.TokenGenerator;
+import vlad.corp.money_manager_backend.domain.repository.ParticipantRepository;
 
 @Configuration
 public class AuthUseCaseConfig {
@@ -17,16 +18,16 @@ public class AuthUseCaseConfig {
     }
 
     @Bean
-    public RegisterUseCase registerUseCase(UserRepository userRepository,
+    public RegisterUseCase registerUseCase(ParticipantRepository participantRepository,
                                            PasswordEncoder encoder,
                                            TokenGenerator tokenGenerator) {
-        return new RegisterUseCase(userRepository, encoder, tokenGenerator);
+        return new RegisterUseCase(participantRepository, encoder, tokenGenerator);
     }
 
     @Bean
-    public LoginUseCase loginUseCase(UserRepository userRepository,
+    public LoginUseCase loginUseCase(ParticipantRepository participantRepository,
                                      PasswordEncoder encoder,
                                      TokenGenerator tokenGenerator) {
-        return new LoginUseCase(userRepository, encoder, tokenGenerator);
+        return new LoginUseCase(participantRepository, encoder, tokenGenerator);
     }
 }

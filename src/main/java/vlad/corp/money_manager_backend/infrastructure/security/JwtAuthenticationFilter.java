@@ -31,8 +31,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = header.substring(7);
             try {
                 JwtPayload jwtPayload = jwtUtil.validateAndExtract(token);
-                AuthenticatedUser authenticatedUser = new AuthenticatedUser(
-                        jwtPayload.userId(),
+                AuthenticatedParticipant authenticatedParticipant = new AuthenticatedParticipant(
+                        jwtPayload.participantId(),
                         jwtPayload.email()
                 );
                 List<SimpleGrantedAuthority> roles = jwtPayload.roles()
@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
-                                authenticatedUser,
+                                authenticatedParticipant,
                                 null,
                                 roles
                         );
