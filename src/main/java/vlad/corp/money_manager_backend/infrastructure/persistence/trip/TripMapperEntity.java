@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @Component
-public class TripMapper {
+public class TripMapperEntity {
 
     public TripEntity toEntity(Trip trip) {
         return new TripEntity(

@@ -1,6 +1,7 @@
 package vlad.corp.money_manager_backend.application.trip;
 
 import vlad.corp.money_manager_backend.application.exception.NotFoundException;
+import vlad.corp.money_manager_backend.domain.model.JoinCode;
 import vlad.corp.money_manager_backend.domain.model.Trip;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 import java.util.UUID;
@@ -12,16 +13,18 @@ public class JoinTripUseCase {
         this.tripRepository = tripRepository;
     }
 
-    public boolean execute(
-            UUID tripId,
+    public UUID execute(
+            String code,
             UUID participantId
     ) {
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new NotFoundException("Trip not found: " + tripId));
+        JoinCode joinCode = new JoinCode(code);
+        Trip trip = tripRepository.findByJoinCode(joinCode)
+                .orElseThrow(() -> new NotFoundException("Trip with join code " + code + " not found"));
+        trip.ensureNotArchived();
         if(!trip.getParticipantIds().contains(participantId)) {
             trip.getParticipantIds().add(participantId);
             tripRepository.save(trip);
         }
-        return true;
+        return trip.getId();
     }
 }

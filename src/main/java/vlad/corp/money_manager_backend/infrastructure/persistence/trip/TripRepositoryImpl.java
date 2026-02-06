@@ -11,9 +11,9 @@ import java.util.UUID;
 @Repository
 public class TripRepositoryImpl implements TripRepository {
     private final TripJpaRepository tripJpaRepository;
-    private final TripMapper tripMapper;
+    private final TripMapperEntity tripMapper;
 
-    public TripRepositoryImpl(TripJpaRepository tripJpaRepository, TripMapper tripMapper) {
+    public TripRepositoryImpl(TripJpaRepository tripJpaRepository, TripMapperEntity tripMapper) {
         this.tripJpaRepository = tripJpaRepository;
         this.tripMapper = tripMapper;
     }
@@ -46,5 +46,14 @@ public class TripRepositoryImpl implements TripRepository {
     public Optional<Trip> findByJoinCode(JoinCode joinCode) {
         return tripJpaRepository.findByJoinCode(joinCode.value())
                 .map(tripMapper::toDomain);
+    }
+
+    @Override
+    public List<Trip> findAllTripsForUser(UUID userId) {
+        return tripJpaRepository.findAllTripsForUser(userId)
+                .stream()
+                .map(tripMapper::toDomain)
+                .toList();
+
     }
 }

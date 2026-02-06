@@ -12,4 +12,5 @@ public interface TripRepository {
     List<Trip> findAll();
     void delete(Trip trip);
     Optional<Trip> findByJoinCode(JoinCode joinCode);
+    List<Trip> findAllTripsForUser(UUID userId);
 }

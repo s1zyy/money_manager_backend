@@ -13,7 +13,7 @@ public class AddParticipantUseCase {
         this.tripRepository = tripRepository;
     }
 
-    public void addParticipant(UUID tripId, UUID participantId) {
+    public void execute(UUID tripId, UUID participantId) {
 
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(()-> new NotFoundException("Trip not found with id: " + tripId));

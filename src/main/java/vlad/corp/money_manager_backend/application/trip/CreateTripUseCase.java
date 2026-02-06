@@ -5,7 +5,7 @@ import vlad.corp.money_manager_backend.domain.model.JoinCode;
 import vlad.corp.money_manager_backend.domain.model.Trip;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
-
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,31 +21,34 @@ public class CreateTripUseCase {
     }
 
     public Trip execute(
+            UUID ownerId,
             String name,
-            Money totalBudget,
-            Money prepaidExpenses,
-            UUID creatorId,
+            BigDecimal totalBudget,
+            BigDecimal prepaidExpenses,
             LocalDate startDate,
             LocalDate endDate
     ) {
         JoinCode joinCode = joinCodeGenerator.generate();
+        Money totalBudgetMoney = new Money(totalBudget);
+        Money prepaidExpensesMoney = new Money(prepaidExpenses);
+
 
         List<UUID> participantIds = new ArrayList<>();
-        participantIds.add(creatorId);
+        participantIds.add(ownerId);
 
         Trip trip = new Trip(
                 UUID.randomUUID(),
-                creatorId,
+                ownerId,
                 name,
                 startDate,
                 endDate,
-                totalBudget,
-                prepaidExpenses,
+                totalBudgetMoney,
+                prepaidExpensesMoney,
                 participantIds,
                 joinCode
         );
-
         tripRepository.save(trip);
         return trip;
+
     }
 }

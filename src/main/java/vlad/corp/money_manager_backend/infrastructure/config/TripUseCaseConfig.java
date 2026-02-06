@@ -39,4 +39,9 @@ public class TripUseCaseConfig {
     public UpdateTripUseCase updateTripUseCase(TripRepository tripRepository) {
         return new UpdateTripUseCase(tripRepository);
     }
+
+    @Bean
+    public ListMyTripsUseCase listMyTripsUseCase(TripRepository tripRepository) {
+        return new ListMyTripsUseCase(tripRepository);
+    }
 }
