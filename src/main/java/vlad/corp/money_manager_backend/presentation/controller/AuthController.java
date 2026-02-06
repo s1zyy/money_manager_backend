@@ -23,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public LoginResponse register(@RequestBody AuthRequest authRequest) {
-        String token = registerUseCase.register(authRequest.email(), authRequest.password());
+        String token = registerUseCase.register(authRequest.email(), authRequest.password(), authRequest.name());
         return new LoginResponse(token);
     }
 
