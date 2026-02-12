@@ -6,11 +6,17 @@ import vlad.corp.money_manager_backend.application.calculator.CalculateBalancesU
 import vlad.corp.money_manager_backend.application.calculator.CalculateDailyLimitUseCase;
 import vlad.corp.money_manager_backend.application.port.JoinCodeGenerator;
 import vlad.corp.money_manager_backend.application.trip.*;
+import vlad.corp.money_manager_backend.domain.policy.TripAccessPolicy;
 import vlad.corp.money_manager_backend.domain.repository.ExpenseRepository;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 
 @Configuration
 public class TripUseCaseConfig {
+
+    @Bean
+    public TripAccessPolicy tripAccessPolicy() {
+        return new TripAccessPolicy();
+    }
 
     @Bean
     public LeaveTripUseCase leaveTripUseCase(TripRepository tripRepository) {

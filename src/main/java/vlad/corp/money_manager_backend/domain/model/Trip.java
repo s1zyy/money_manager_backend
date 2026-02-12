@@ -2,6 +2,9 @@ package vlad.corp.money_manager_backend.domain.model;
 
 import lombok.Getter;
 import vlad.corp.money_manager_backend.application.exception.*;
+import vlad.corp.money_manager_backend.domain.exceptions.ArchivedTripException;
+import vlad.corp.money_manager_backend.domain.exceptions.OnlyOwnerCanArchiveTripException;
+import vlad.corp.money_manager_backend.domain.exceptions.OwnerCannotLeaveTripException;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
 
 import java.time.LocalDate;

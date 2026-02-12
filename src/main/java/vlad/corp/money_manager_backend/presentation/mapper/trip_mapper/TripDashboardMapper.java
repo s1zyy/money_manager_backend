@@ -2,17 +2,18 @@ package vlad.corp.money_manager_backend.presentation.mapper.trip_mapper;
 
 import org.springframework.stereotype.Component;
 import vlad.corp.money_manager_backend.application.trip.TripDashboard;
-import vlad.corp.money_manager_backend.domain.model.Expense;
-import vlad.corp.money_manager_backend.presentation.dto.expense.ExpenseDto;
 import vlad.corp.money_manager_backend.presentation.dto.trip.ParticipantBalanceDto;
 import vlad.corp.money_manager_backend.presentation.dto.trip.TripDashboardDto;
+import vlad.corp.money_manager_backend.presentation.mapper.expense_mapper.ExpenseMapperDto;
 
 @Component
 public class TripDashboardMapper {
     private final TripMapperDto tripMapperDto;
+    private final ExpenseMapperDto expenseMapperDto;
 
-    public TripDashboardMapper(TripMapperDto tripMapperDto) {
+    public TripDashboardMapper(TripMapperDto tripMapperDto, ExpenseMapperDto expenseMapperDto) {
         this.tripMapperDto = tripMapperDto;
+        this.expenseMapperDto = expenseMapperDto;
     }
 
     public TripDashboardDto toDto(TripDashboard dashboard) {
@@ -23,19 +24,9 @@ public class TripDashboardMapper {
                         .map(e -> new ParticipantBalanceDto(e.getKey(), e.getValue().getAmount()))
                         .toList(),
                 dashboard.expenses().stream()
-                        .map(this::toExpenseDto)
+                        .map(expenseMapperDto::toDto)
                         .toList()
         );
 
-    }
-    private ExpenseDto toExpenseDto(Expense expense) {
-        return new ExpenseDto(
-                expense.getId(),
-                expense.getPayerId(),
-                expense.getAmount().getAmount(),
-                expense.getDate(),
-                expense.getDescription(),
-                expense.getParticipantIds()
-        );
     }
 }

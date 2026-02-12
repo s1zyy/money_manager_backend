@@ -1,7 +1,7 @@
 package vlad.corp.money_manager_backend.application.participant;
 
 import vlad.corp.money_manager_backend.application.exception.NotFoundException;
-import vlad.corp.money_manager_backend.application.exception.ParticipantAlreadyExistException;
+import vlad.corp.money_manager_backend.domain.exceptions.ParticipantAlreadyExistException;
 import vlad.corp.money_manager_backend.domain.model.Trip;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 import java.util.UUID;
