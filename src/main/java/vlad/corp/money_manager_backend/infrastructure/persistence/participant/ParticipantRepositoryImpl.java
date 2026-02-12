@@ -4,9 +4,8 @@ import org.springframework.stereotype.Repository;
 import vlad.corp.money_manager_backend.domain.model.Participant;
 import vlad.corp.money_manager_backend.domain.repository.ParticipantRepository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class ParticipantRepositoryImpl implements ParticipantRepository {
@@ -29,21 +28,19 @@ public class ParticipantRepositoryImpl implements ParticipantRepository {
     }
 
     @Override
-    public void delete(Participant participant) {
-        jpaRepository.delete(participantMapper.toEntity(participant));
-
-    }
-
-    @Override
     public Optional<Participant> findById(UUID id) {
         return jpaRepository.findById(id).map(participantMapper::toDomain);
     }
 
     @Override
-    public List<Participant> findAll() {
-        return jpaRepository.findAll()
+    public Set<Participant> findAllByIds(Set<UUID> ids) {
+        if (ids.isEmpty()) {
+            return new HashSet<>();
+        }
+        return jpaRepository.findAllById(ids)
                 .stream()
                 .map(participantMapper::toDomain)
-                .toList();
+                .collect(Collectors.toSet());
     }
+
 }

@@ -8,6 +8,7 @@ import java.util.Objects;
 public record Money(BigDecimal amount) {
     public Money {
         Objects.requireNonNull(amount, "amount must not be null");
+        amount = amount.setScale(2, RoundingMode.HALF_UP);
     }
 
     public static Money of(BigDecimal amount) {
@@ -35,7 +36,7 @@ public record Money(BigDecimal amount) {
             throw new ArithmeticException("Cannot divide by zero");
         }
         return new Money(
-                this.amount.divide(divisor, 2,  RoundingMode.DOWN)
+                this.amount.divide(divisor, 2,  RoundingMode.HALF_UP)
         );
     }
 
