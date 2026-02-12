@@ -1,93 +1,96 @@
-# Money Manager Backend
+# Trip Expense Splitter Backend
 
-A full-featured server application for managing user finances. The system allows you to manage wallets, track transactions, and control financial flows.
+A robust REST API application for managing shared expenses during group trips. Easily track who paid what and simplify the settling up process among travel companions.
 
 ## 📋 Project Description
 
-Money Manager Backend is a **REST API application built on Spring Boot 4.0**. This is the **backend component** of the Money Manager system.
+Trip Expense Splitter Backend is a **REST API application built on Spring Boot 4.0** with **Clean Architecture** design principles. This is the backend component that powers efficient expense management for group trips.
 
 > **Note:** This repository contains only the backend. The mobile app is maintained in a separate repository: [Money Manager Mobile App](https://github.com/s1zyy/money_manager) (Flutter + Dart)
 
-The backend provides functionality for:
+### Core Features
 
-- ✅ Managing user accounts with JWT authentication
-- ✅ Creating and managing wallets
-- ✅ Recording financial transactions (income/expenses)
-- ✅ Viewing transaction history
-- ✅ Validating data at the API level
-- ✅ **Sharing wallets with friends** — add collaborators to manage finances together
-- ✅ **Offline support** — modify and create transactions offline with automatic sync when internet connection is restored
+- ✅ **User Authentication** — Secure JWT-based authentication
+- ✅ **Trip Management** — Create, update, and archive trips with multiple participants
+- ✅ **Expense Tracking** — Record shared expenses with automatic split calculation
+- ✅ **Participant Management** — Add friends to trips via unique join codes
+- ✅ **Balance Calculation** — Automatic calculation of who owes whom
+- ✅ **Daily Limits** — Track spending against budgets
+- ✅ **Clean Architecture** — Layered design with clear separation of concerns
 
 ## 🛠 Technology Stack
 
-- **Java 21** — programming language
-- **Spring Boot 4.0.2** — framework for building applications
-- **Spring Data JPA** — ORM and database interaction
-- **Spring Security** — authentication and authorization
-- **JWT (jjwt)** — tokens for secure data transmission
-- **PostgreSQL 15** — primary database
-- **H2 Database** — embedded database for development
-- **Flyway** — database migration management
-- **Lombok** — reducing boilerplate code
-- **Maven** — dependency management
-
-## 🤝 Collaborative Features
-
-### Shared Wallets
-- **Add Friends** — invite other users to collaborate on a wallet
-- **Shared Ownership** — multiple users can manage transactions in the same wallet
-- **Real-time Synchronization** — all changes are instantly synced across all collaborators
-
-### Offline Support
-- **Offline Mode** — create and modify transactions without internet connection
-- **Local Storage** — all changes are cached locally on the device
-- **Automatic Sync** — when internet connection is restored, all pending transactions are automatically synchronized with the backend
-- **Conflict Resolution** — intelligent handling of concurrent changes from multiple users
-- **Status Tracking** — clear indication of synced vs pending transactions
+- **Java 21** — Modern programming language with latest features
+- **Spring Boot 4.0.2** — Production-ready application framework
+- **Spring Data JPA** — ORM for database interaction
+- **Spring Security** — Authentication and authorization framework
+- **JWT (jjwt 0.12.5)** — Secure token-based authentication
+- **PostgreSQL 15** — Primary production database
+- **H2 Database** — Embedded database for development/testing
+- **Flyway** — Database versioning and migration management
+- **Lombok** — Reduce boilerplate code with annotations
+- **Maven 3.8+** — Dependency and build management
 
 ## 📁 Project Architecture
 
-This project follows **Clean Architecture** principles, ensuring clear separation of concerns and high maintainability. The architecture is organized into distinct layers:
+This project follows **Clean Architecture** principles, organizing code into distinct layers with well-defined responsibilities:
 
 ```
 src/main/java/vlad/corp/money_manager_backend/
-├── application/          # Application Layer - Business logic and services
-│   ├── auth/            # Authentication and authorization services
-│   ├── exception/       # Custom exceptions
-│   ├── transaction/     # Transaction handling logic
-│   ├── user/            # User handling logic
-│   └── wallet/          # Wallet handling logic
-├── domain/              # Domain Layer - Core business logic
-│   ├── model/           # Entities (User, Wallet, Transaction)
-│   ├── repository/      # Repository interfaces (abstraction)
-│   └── exception/       # Domain-specific exceptions
-├── infrastructure/      # Infrastructure Layer - External services
-│   └── ...             # Database implementation, configurations
-└── presentation/        # Presentation Layer - REST API
-    ├── controller/      # HTTP endpoints
-    ├── dto/             # Data Transfer Objects
-    ├── mapper/          # Converters between DTOs and domain models
-    └── ApiExceptionHandler.java
+├── application/              # Application Layer - Use Cases & Business Logic
+│   ├── auth/                # Authentication use cases (login, register)
+│   ├── trip/                # Trip management use cases
+│   ├── expense/             # Expense management use cases
+│   ├── participant/         # Participant management use cases
+│   ├── calculator/          # Balance & limit calculation logic
+│   ├── exception/           # Application-level exceptions
+│   └── port/                # Interfaces for external services
+│
+├── domain/                  # Domain Layer - Core Business Rules
+│   ├── model/              # Domain entities (Trip, Expense, Participant)
+│   ├── value_objects/      # Money and other value objects
+│   ├── policy/             # Business policies (TripAccessPolicy)
+│   ├── repository/         # Repository interfaces (data abstraction)
+│   ├── exceptions/         # Domain-specific exceptions
+│   └── service/            # Domain services (optional)
+│
+├── infrastructure/          # Infrastructure Layer - Technical Details
+│   ├── config/             # Configuration classes (UseCase wiring)
+│   ├── persistence/        # JPA repository implementations
+│   │   ├── trip/          # Trip persistence
+│   │   ├── expense/       # Expense persistence
+│   │   └── participant/   # Participant persistence
+│   └── security/          # Security implementation (JWT, filters)
+│
+└── presentation/           # Presentation Layer - API Endpoints
+    ├── controller/        # REST controllers
+    │   ├── AuthController
+    │   ├── TripController
+    │   ├── ExpenseController
+    │   └── ParticipantController
+    ├── dto/               # Request/Response DTOs
+    ├── mapper/            # DTO ↔ Domain Model converters
+    └── ApiExceptionHandler.java  # Global exception handling
 ```
 
-### Clean Architecture Benefits
+### Clean Architecture Advantages
 
-- **Independence from frameworks** — Core business logic is framework-agnostic
-- **Testability** — Each layer can be tested independently
+- **Testability** — Business logic is independent of frameworks
 - **Maintainability** — Clear responsibilities for each layer
-- **Flexibility** — Easy to swap implementations without affecting business logic
-- **Scalability** — Simple to extend with new features
+- **Flexibility** — Easy to modify or swap implementations
+- **Independence** — Core logic doesn't depend on external libraries
+- **Scalability** — Simple to add new features without breaking existing code
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Java 21 or higher
-- Maven 3.8+
-- Docker and Docker Compose (optional)
-- PostgreSQL 15 (or use Docker Compose)
+- **Java 21** or higher
+- **Maven 3.8+** (or use the included `mvnw` wrapper)
+- **Docker & Docker Compose** (recommended for database)
+- **Git**
 
-### Local Installation
+### Installation & Setup
 
 1. **Clone the repository:**
 ```bash
@@ -95,15 +98,21 @@ git clone <repository-url>
 cd money_manager_backend
 ```
 
-2. **Configure environment variables:**
+2. **Configure environment (optional):**
 ```bash
 cp src/main/resources/application.properties.example src/main/resources/application.properties
 ```
-Edit the database connection parameters if needed.
+The default configuration is pre-set for local development with Docker.
 
-3. **Run PostgreSQL (with Docker):**
+3. **Start PostgreSQL with Docker:**
 ```bash
 docker-compose up -d
+```
+This will start PostgreSQL on `localhost:5432` with the credentials configured in `application.properties`.
+
+Verify the database is running:
+```bash
+docker-compose ps
 ```
 
 4. **Build the project:**
@@ -116,160 +125,194 @@ docker-compose up -d
 ./mvnw spring-boot:run
 ```
 
-The application will be available at: `http://localhost:8080`
+The API will be available at: **`http://localhost:8080`**
+
+### Database Initialization
+
+The database schema is automatically created on first startup using Flyway migrations. Check `src/main/resources/db/migration/` for migration scripts.
 
 ## 📚 API Documentation
 
-### Main Endpoints
+All endpoints are RESTful and return JSON responses. Authentication is required for most endpoints using JWT tokens.
 
-#### Authentication
-- `POST /api/auth/register` — register a new user
-- `POST /api/auth/login` — login and get JWT token
+### Authentication Endpoints
 
-#### Users
-- `GET /api/users/me` — get current user information
-- `PUT /api/users/me` — update user profile
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/auth/register` | Register a new participant account |
+| `POST` | `/api/auth/login` | Login and receive JWT token |
 
-#### Wallets
-- `GET /api/wallets` — get all user wallets
-- `POST /api/wallets` — create a new wallet
-- `GET /api/wallets/{id}` — get wallet details
-- `PUT /api/wallets/{id}` — update wallet
-- `DELETE /api/wallets/{id}` — delete wallet
+### Trip Management Endpoints
 
-#### Transactions
-- `GET /api/transactions` — get transaction history
-- `POST /api/transactions` — create a new transaction
-- `GET /api/transactions/{id}` — get transaction details
-- `PUT /api/transactions/{id}` — update transaction
-- `DELETE /api/transactions/{id}` — delete transaction
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/trips` | Create a new trip |
+| `GET` | `/api/trips` | List all trips for current user |
+| `GET` | `/api/trips/{tripId}` | Get trip details |
+| `PUT` | `/api/trips/{tripId}` | Update trip information |
+| `POST` | `/api/trips/{tripId}/archive` | Archive a trip (owner only) |
+| `POST` | `/api/trips/{tripId}/join` | Join a trip using join code |
+| `POST` | `/api/trips/{tripId}/leave` | Leave a trip |
+| `GET` | `/api/trips/{tripId}/dashboard` | Get trip dashboard with balances |
 
-## 🧪 Testing
+### Expense Endpoints
 
-Run tests using Maven:
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/trips/{tripId}/expenses` | Create a new expense |
+| `GET` | `/api/trips/{tripId}/expenses` | List all expenses in a trip |
+| `GET` | `/api/trips/{tripId}/expenses/{expenseId}` | Get expense details |
+| `PUT` | `/api/trips/{tripId}/expenses/{expenseId}` | Update expense |
+| `DELETE` | `/api/trips/{tripId}/expenses/{expenseId}` | Delete expense |
 
-```bash
-./mvnw test
+### Participant Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/trips/{tripId}/participants` | List all trip participants |
+
+## 📊 Database Schema
+
+### Tables Overview
+
+- **participants** — User accounts (name, email, password hash)
+- **trips** — Trip records (name, dates, budget, owner, status)
+- **trip_participants** — Many-to-many relationship between trips and participants
+- **expenses** — Trip expenses (amount, payer, date, description)
+- **expense_participants** — Many-to-many relationship for expense splits
+
+### Key Relationships
+
+```
+Participants (1) ──► (M) Trips (as owner)
+       │
+       └──► (M) Trips (as participant via trip_participants)
+            │
+            └──► (M) Expenses (as payer)
+                 │
+                 └──► (M) Expense_Participants (split among participants)
 ```
 
-Test coverage report:
-```bash
-./mvnw test jacoco:report
-```
+See `src/main/resources/db/migration/V1_innit_tables_create.sql` for the complete schema.
 
 ## 🔐 Security
 
 ### JWT Authentication
 - All API endpoints are protected with JWT tokens (except `/api/auth/register` and `/api/auth/login`)
-- Token expiration time: set by the `security.jwt.ttl-seconds` variable (in the application 360000000 seconds ≈ ~11.4 years)
-- Secret key is stored in `application.properties`
+- Secret key is stored securely in `application.properties`
 
 ### Data Validation
-- Input data is validated at the controller level using Spring Validation
-- Custom exceptions are handled by a global Exception Handler
+- Input data is validated at the controller level using Spring Validation annotations
+- Custom exceptions are handled by a global exception handler (`ApiExceptionHandler`)
+- Domain-level validation ensures business rules are enforced
 
-## 📖 Database Management
-
-### Flyway Migrations
-Migrations are stored in `src/main/resources/db/migration/`:
-- `V1_create_users_wallets_transactions.sql` — initial database schema
-
-Migrations run automatically when the application starts.
-
-### Database Initialization (for development)
-
-If you use Docker Compose, the database initializes automatically:
-
-```bash
-docker-compose up -d
-```
-
-## 🔧 Configuration
-
-### File `application.properties`
-
-Key parameters:
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `spring.datasource.url` | Database connection URL | `jdbc:postgresql://localhost:5432/money_manager_db` |
-| `spring.datasource.username` | Database user | `money_manager_user` |
-| `spring.datasource.password` | Database password | `sav320801` |
-| `security.jwt.secret` | JWT secret key | `13fe8c32a4c0ac72b3567a0ac3701f510ef78acac613225ea69a6d037ac0c65f` |
-| `security.jwt.ttl-seconds` | JWT token lifetime | `360000000` |
+### Password Security
+- Passwords are hashed using Spring Security's built-in password encoders
+- Never stored in plain text
 
 ## 📝 Usage Examples
 
-### Registration
+### 1. Register a New User
+
 ```bash
 curl -X POST http://localhost:8080/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "user@example.com",
+    "email": "john@example.com",
     "password": "securePassword123"
   }'
 ```
 
-### Login
+**Response:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+### 2. Login
+
 ```bash
 curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "user@example.com",
+    "email": "john@example.com",
     "password": "securePassword123"
   }'
 ```
 
-### Creating a Wallet
+**Response:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+### 3. Create a Trip
+
 ```bash
-curl -X POST http://localhost:8080/api/wallets \
+curl -X POST http://localhost:8080/api/trips \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "My Wallet",
-    "currency": "USD",
-    "balance": 1000.00
+    "name": "Summer Vacation 2024",
+    "startDate": "2024-06-01",
+    "endDate": "2024-06-15",
+    "totalBudget": 5000,
+    "prepaidExpenses": 1500
   }'
 ```
+
+### 4. Join a Trip
+
+```bash
+curl -X POST http://localhost:8080/api/trips/join
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json"
+    -d '{
+        "code": "ABC123"
+    }'
+```
+
+### 5. Add an Expense
+
+```bash
+curl -X POST http://localhost:8080/api/trips/{tripId}/expenses \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 120.50,
+    "description": "Restaurant dinner",
+    "date": "2024-06-05",
+    "participantIds": [
+      "550e8400-e29b-41d4-a716-446655440000",
+      "550e8400-e29b-41d4-a716-446655440001"
+    ]
+  }'
+```
+
+### 6. Get Trip Dashboard (Balances)
+
+```bash
+curl -X GET http://localhost:8080/api/trips/{tripId}/dashboard \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
 
 ## 🐳 Docker
 
 ### Running with Docker Compose
+
 ```bash
 docker-compose up -d
 ```
 
+This starts a PostgreSQL 15 container on port 5432.
+
 ### Stopping
+
 ```bash
 docker-compose down
-```
-
-## 📊 Database Structure
-
-### Tables
-
-- **users** — user information
-- **wallets** — user wallets
-- **transactions** — transaction history
-
-Detailed schema can be found in `src/main/resources/db/migration/V1_create_users_wallets_transactions.sql`
-
-## 🐛 Troubleshooting
-
-### Database Connection Error
-```
-Make sure PostgreSQL is running and accessible at the address specified in application.properties
-docker-compose ps  # To check Docker containers
-```
-
-### Build Errors
-```bash
-./mvnw clean install -X  # Run build in debug mode
-```
-
-### Clear Maven Cache
-```bash
-./mvnw clean
 ```
 
 ## 🔗 Related Projects
@@ -324,7 +367,5 @@ Just make sure to include a copy of the license and copyright notice.
 
 ---
 
-**Last Updated:** January 2026
-
-**Version:** 0.0.1-SNAPSHOT
+**Last Updated:** February 2026
 
