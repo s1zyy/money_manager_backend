@@ -14,7 +14,7 @@ public class ExpenseMapperDto {
                 expense.getAmount().amount(),
                 expense.getDate(),
                 expense.getDescription(),
-                expense.getParticipantIds()
+                expense.getParticipantIds().stream().toList()
         );
     }
 }

@@ -64,7 +64,7 @@ public class ExpenseController {
         return expenses.stream().map(expenseMapper::toDto).toList();
     }
 
-    @PostMapping("/{expenseId}")
+    @PutMapping("/{expenseId}")
     public ExpenseDto updateExpense(
             @PathVariable UUID tripId,
             @PathVariable UUID expenseId,
