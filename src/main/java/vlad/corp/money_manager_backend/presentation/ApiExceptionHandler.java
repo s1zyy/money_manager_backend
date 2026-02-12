@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import vlad.corp.money_manager_backend.application.exception.*;
-import vlad.corp.money_manager_backend.domain.exceptions.ArchivedTripException;
-import vlad.corp.money_manager_backend.domain.exceptions.InvalidExpenseDateException;
-import vlad.corp.money_manager_backend.domain.exceptions.OwnerCannotLeaveTripException;
-import vlad.corp.money_manager_backend.domain.exceptions.ParticipantAlreadyExistException;
+import vlad.corp.money_manager_backend.domain.exceptions.*;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -27,6 +24,12 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidExpenseDateException(InvalidExpenseDateException ex){
         return new ErrorResponse(ex.getMessage()); }
+
+    @ExceptionHandler(BusinessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBusinessException(BusinessException ex){
+        return new ErrorResponse(ex.getMessage());
+    }
 
 
     @ExceptionHandler(InvalidCredentialsException.class)
