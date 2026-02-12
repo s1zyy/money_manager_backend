@@ -2,7 +2,7 @@ package vlad.corp.money_manager_backend.application.auth;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import vlad.corp.money_manager_backend.application.auth.port.TokenGenerator;
-import vlad.corp.money_manager_backend.application.exception.ParticipantAlreadyExistException;
+import vlad.corp.money_manager_backend.domain.exceptions.ParticipantAlreadyExistException;
 import vlad.corp.money_manager_backend.domain.model.Participant;
 import vlad.corp.money_manager_backend.domain.repository.ParticipantRepository;
 import java.util.List;

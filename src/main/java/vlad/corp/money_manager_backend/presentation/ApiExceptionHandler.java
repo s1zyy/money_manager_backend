@@ -6,6 +6,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import vlad.corp.money_manager_backend.application.exception.*;
+import vlad.corp.money_manager_backend.domain.exceptions.ArchivedTripException;
+import vlad.corp.money_manager_backend.domain.exceptions.InvalidExpenseDateException;
+import vlad.corp.money_manager_backend.domain.exceptions.OwnerCannotLeaveTripException;
+import vlad.corp.money_manager_backend.domain.exceptions.ParticipantAlreadyExistException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -19,11 +23,10 @@ public class ApiExceptionHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleAccessDeniedException(AccessDeniedException ex){
-        return new ErrorResponse(ex.getMessage());
-    }
+    @ExceptionHandler(InvalidExpenseDateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleInvalidExpenseDateException(InvalidExpenseDateException ex){
+        return new ErrorResponse(ex.getMessage()); }
 
 
     @ExceptionHandler(InvalidCredentialsException.class)
@@ -38,12 +41,6 @@ public class ApiExceptionHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
-    @ExceptionHandler(OnlyOwnerCanArchiveTripException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse onlyOwnerCanArchiveTripException(OnlyOwnerCanArchiveTripException ex){
-        return new ErrorResponse(ex.getMessage());
-    }
-
     @ExceptionHandler(ArchivedTripException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse archivedTripException(Exception ex){
@@ -53,6 +50,12 @@ public class ApiExceptionHandler {
     @ExceptionHandler(OwnerCannotLeaveTripException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse ownerCannotLeaveTripException(OwnerCannotLeaveTripException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbiddenException(ForbiddenException ex){
         return new ErrorResponse(ex.getMessage());
     }
 
