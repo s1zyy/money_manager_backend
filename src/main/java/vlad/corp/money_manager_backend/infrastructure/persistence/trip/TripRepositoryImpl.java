@@ -31,18 +31,6 @@ public class TripRepositoryImpl implements TripRepository {
     }
 
     @Override
-    public List<Trip> findAll() {
-        return tripJpaRepository.findAll().stream()
-                .map(tripMapper::toDomain)
-                .toList();
-    }
-
-    @Override
-    public void delete(Trip trip) {
-        tripJpaRepository.delete(tripMapper.toEntity(trip));
-    }
-
-    @Override
     public Optional<Trip> findByJoinCode(JoinCode joinCode) {
         return tripJpaRepository.findByJoinCode(joinCode.value())
                 .map(tripMapper::toDomain);

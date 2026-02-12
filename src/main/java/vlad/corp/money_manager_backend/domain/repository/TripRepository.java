@@ -9,8 +9,6 @@ import java.util.UUID;
 public interface TripRepository {
     void save(Trip trip);
     Optional<Trip> findById(UUID id);
-    List<Trip> findAll();
-    void delete(Trip trip);
     Optional<Trip> findByJoinCode(JoinCode joinCode);
     List<Trip> findAllTripsForUser(UUID userId);
 }

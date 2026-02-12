@@ -8,9 +8,7 @@ import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CreateTripUseCase {
     private final TripRepository tripRepository;
@@ -34,7 +32,7 @@ public class CreateTripUseCase {
         Money prepaidExpensesMoney = new Money(prepaidExpenses);
 
 
-        List<UUID> participantIds = new ArrayList<>();
+        Set<UUID> participantIds = new HashSet<>();
         participantIds.add(ownerId);
 
         Trip trip = new Trip(

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import vlad.corp.money_manager_backend.domain.model.JoinCode;
 import vlad.corp.money_manager_backend.domain.model.Trip;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 @Component
@@ -33,7 +32,7 @@ public class TripMapperEntity {
                 tripEntity.getEndDate(),
                 new Money(tripEntity.getTotalBudget()),
                 new Money(tripEntity.getPrepaidExpenses()),
-                new ArrayList<>(tripEntity.getParticipantIds()),
+                new HashSet<>(tripEntity.getParticipantIds()),
                 new JoinCode(tripEntity.getJoinCode()),
                 tripEntity.getTripStatus()
         );

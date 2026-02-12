@@ -14,7 +14,7 @@ public class TripMapperDto {
                 trip.getName(),
                 trip.getStartDate(),
                 trip.getEndDate(),
-                trip.getParticipantIds(),
+                trip.getParticipantIds().stream().sorted().toList(),
                 trip.getJoinCode().value(),
                 trip.getStatus().name()
 

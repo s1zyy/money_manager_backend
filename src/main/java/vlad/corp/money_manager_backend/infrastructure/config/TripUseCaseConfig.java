@@ -8,6 +8,7 @@ import vlad.corp.money_manager_backend.application.port.JoinCodeGenerator;
 import vlad.corp.money_manager_backend.application.trip.*;
 import vlad.corp.money_manager_backend.domain.policy.TripAccessPolicy;
 import vlad.corp.money_manager_backend.domain.repository.ExpenseRepository;
+import vlad.corp.money_manager_backend.domain.repository.ParticipantRepository;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 
 @Configuration
@@ -16,6 +17,11 @@ public class TripUseCaseConfig {
     @Bean
     public TripAccessPolicy tripAccessPolicy() {
         return new TripAccessPolicy();
+    }
+
+    @Bean
+    public ListParticipantsUseCase listParticipantsUseCase(TripRepository tripRepository, ParticipantRepository participantRepository) {
+        return new ListParticipantsUseCase(tripRepository, participantRepository);
     }
 
     @Bean

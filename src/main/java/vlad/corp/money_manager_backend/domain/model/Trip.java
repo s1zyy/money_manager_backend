@@ -2,14 +2,13 @@ package vlad.corp.money_manager_backend.domain.model;
 
 import lombok.Getter;
 import vlad.corp.money_manager_backend.application.exception.*;
-import vlad.corp.money_manager_backend.domain.exceptions.ArchivedTripException;
-import vlad.corp.money_manager_backend.domain.exceptions.OnlyOwnerCanArchiveTripException;
-import vlad.corp.money_manager_backend.domain.exceptions.OwnerCannotLeaveTripException;
+import vlad.corp.money_manager_backend.domain.exceptions.*;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -22,11 +21,11 @@ public class Trip {
     private LocalDate endDate;
     private Money totalBudget;
     private Money prepaidExpenses;
-    private List<UUID> participantIds;
+    private Set<UUID> participantIds;
     private final JoinCode joinCode;
     private TripStatus status;
 
-    public Trip(UUID id, UUID ownerId, String name, LocalDate startDate, LocalDate endDate, Money totalBudget, Money prepaidExpenses, List<UUID> participantIds, JoinCode joinCode, TripStatus status) {
+    public Trip(UUID id, UUID ownerId, String name, LocalDate startDate, LocalDate endDate, Money totalBudget, Money prepaidExpenses, Set<UUID> participantIds, JoinCode joinCode, TripStatus status) {
         this.id = id;
         this.ownerId = ownerId;
         this.name = name;
@@ -96,5 +95,14 @@ public class Trip {
         }
     }
 
+    public void addParticipant(UUID participantId) {
+        ensureNotArchived();
+        if (this.participantIds.contains(participantId)) {
+            throw new ParticipantAlreadyExistException("Participant with id " + participantId + " already exists in trip with id " + id);
+        }
+        if(this.participantIds.size()>=10) {
+            throw new BusinessException("Cannot add more than 10 participants to a trip"); }
+        this.participantIds.add(participantId);
+    }
 
 }
