@@ -14,7 +14,7 @@ public class ExpenseMapper {
                 entity.getTripId(),
                 new Money(entity.getAmount()),
                 entity.getPayerId(),
-                entity.getParticipantIds().stream().toList(),
+                new HashSet<>(entity.getParticipantIds()),
                 entity.getDate(),
                 entity.getDescription()
         );

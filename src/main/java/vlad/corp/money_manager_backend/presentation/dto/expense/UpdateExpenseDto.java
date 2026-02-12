@@ -5,12 +5,10 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
-public record ExpenseDto(
-        UUID id,
-        UUID payerId,
+public record UpdateExpenseDto(
         BigDecimal amount,
         LocalDate date,
-        String description,
-        Set<UUID> participantIds
+        Set<UUID> newParticipantIds,
+        String description
 ) {
 }

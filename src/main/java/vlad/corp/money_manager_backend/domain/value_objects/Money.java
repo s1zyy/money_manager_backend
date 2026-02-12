@@ -11,6 +11,11 @@ public record Money(BigDecimal amount) {
     }
 
     public static Money of(BigDecimal amount) {
+        Objects.requireNonNull(amount, "Amount must not be null");
+        if(amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+        amount = amount.setScale(2, RoundingMode.HALF_UP);
         return new Money(amount);
     }
 
@@ -22,14 +27,13 @@ public record Money(BigDecimal amount) {
         return new Money(this.amount.subtract(other.amount));
     }
     public static Money zero() {
-        return new Money(BigDecimal.ZERO);
+        return Money.of(BigDecimal.ZERO);
     }
 
     public Money divide(BigDecimal divisor) {
         if(divisor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new ArithmeticException("Cannot divide by zero");
         }
-
         return new Money(
                 this.amount.divide(divisor, 2,  RoundingMode.DOWN)
         );

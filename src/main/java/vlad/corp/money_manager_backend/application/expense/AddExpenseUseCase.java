@@ -4,38 +4,43 @@ import vlad.corp.money_manager_backend.application.exception.InvalidParticipantE
 import vlad.corp.money_manager_backend.application.exception.NotFoundException;
 import vlad.corp.money_manager_backend.domain.model.Expense;
 import vlad.corp.money_manager_backend.domain.model.Trip;
+import vlad.corp.money_manager_backend.domain.policy.TripAccessPolicy;
 import vlad.corp.money_manager_backend.domain.repository.ExpenseRepository;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
-
-import java.time.Clock;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 public class AddExpenseUseCase {
     private final TripRepository tripRepository;
     private final ExpenseRepository expenseRepository;
-    private final Clock clock;
+    private final TripAccessPolicy tripAccessPolicy;
 
-    public AddExpenseUseCase(TripRepository tripRepository, ExpenseRepository expenseRepository, Clock clock) {
+    public AddExpenseUseCase(TripRepository tripRepository, ExpenseRepository expenseRepository, TripAccessPolicy tripAccessPolicy) {
         this.tripRepository = tripRepository;
         this.expenseRepository = expenseRepository;
-        this.clock = clock;
+        this.tripAccessPolicy = tripAccessPolicy;
     }
 
-    public Expense execute(UUID tripId, UUID payerId, Money amount, Set<UUID> participants, String description) {
+    public Expense execute(UUID tripId,
+                           UUID payerId,
+                           BigDecimal amountBigD,
+                           LocalDate date,
+                           Set<UUID> participants,
+                           String description) {
 
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new NotFoundException("Trip not found"));
 
-        trip.ensureNotArchived();
+        tripAccessPolicy.ensureNotArchived(trip);
+        Money amount =  Money.of(amountBigD);
 
-        if(!trip.getParticipantIds().contains(payerId)) {//todo maybe bring this check to a separate method
-            throw new InvalidParticipantException("Payer is not a participant of the trip");
-        }
+        tripAccessPolicy.ensureParticipant(trip, payerId);
 
-        if(!trip.getParticipantIds().containsAll(participants)) {//todo same here
+        if(!new HashSet<>(trip.getParticipantIds()).containsAll(participants)) {
             throw new InvalidParticipantException("Participant is not a participant of the trip");
         }
 
@@ -44,8 +49,8 @@ public class AddExpenseUseCase {
                 tripId,
                 amount,
                 payerId,
-                participants.stream().toList(),
-                LocalDate.now(clock),
+                participants,
+                date,
                 description
         );
         expenseRepository.save(expense);
