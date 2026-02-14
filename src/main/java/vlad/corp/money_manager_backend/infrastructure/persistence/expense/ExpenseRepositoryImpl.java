@@ -3,9 +3,7 @@ package vlad.corp.money_manager_backend.infrastructure.persistence.expense;
 import org.springframework.stereotype.Repository;
 import vlad.corp.money_manager_backend.domain.model.Expense;
 import vlad.corp.money_manager_backend.domain.repository.ExpenseRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public class ExpenseRepositoryImpl implements ExpenseRepository {
@@ -46,5 +44,12 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
                 .stream()
                 .map(expenseMapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Set<UUID> findActiveParticipantIds(UUID tripId) {
+        Set<UUID> ids = new HashSet<>(jpaRepository.findDistinctParticipantsInExpenses(tripId));
+        ids.addAll(jpaRepository.findDistinctPayersInExpenses(tripId));
+        return ids;
     }
 }

@@ -20,30 +20,21 @@ public class CalculateBalancesUseCase {
         }
 
         for(Expense expense: expenses) {
-            int participantsCount = expense.getParticipantIds().size();
+            Money totalAmount = expense.getAmount();
+            UUID payerId = expense.getPayerId();
+            balances.put(payerId, balances.get(payerId).add(totalAmount));
 
-            Money share = expense.getAmount().divide(
+            int participantsCount = expense.getParticipantIds().size();
+            Money share = totalAmount.divide(
                     BigDecimal.valueOf(participantsCount)
             );
-
             for(UUID participantId: expense.getParticipantIds()) {
-
-                if(participantId.equals(expense.getPayerId())){
-                    balances.put(
-                            participantId,
-                            balances.get(participantId)
-                                    .add(expense.getAmount().subtract(share))
-                    );
-                } else {
-                    balances.put(
-                            participantId,
-                            balances.get(participantId)
-                                    .subtract(share)
-                    );
-                }
-
+                balances.put(
+                        participantId,
+                        balances.get(participantId)
+                                .subtract(share)
+                );
             }
-
         }
         return balances;
     }
