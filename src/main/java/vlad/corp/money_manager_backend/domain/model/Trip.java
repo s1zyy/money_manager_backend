@@ -4,9 +4,7 @@ import lombok.Getter;
 import vlad.corp.money_manager_backend.application.exception.*;
 import vlad.corp.money_manager_backend.domain.exceptions.*;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
-
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -71,6 +69,12 @@ public class Trip {
             this.name = newName;
         }
     }
+    public void ensureOwner(UUID participantId) {
+        ensureNotArchived();
+        if (!ownerId.equals(participantId)) {
+            throw new ForbiddenException("Only the owner can perform this action");
+        }
+    }
 
     public void updateDates(LocalDate start, LocalDate end) {
         ensureNotArchived();
@@ -84,15 +88,19 @@ public class Trip {
         if (prepaid != null) this.prepaidExpenses = prepaid;
     }
 
-    public void updateParticipants(List<UUID> newParticipants) {
+    public void updateParticipants(Set<UUID> newParticipants, Set<UUID> activeParticipantIds) {
         ensureNotArchived();
-        if (newParticipants != null) {
-            if (!newParticipants.contains(this.ownerId)) {
-                throw new NotFoundException("Owner must remain in participants");
-            }
-            this.participantIds.clear();
-            this.participantIds.addAll(newParticipants);
+        if (!newParticipants.contains(this.ownerId)) {
+            throw new BusinessException("Owner must remain in participants");
         }
+        for (UUID participantId : activeParticipantIds) {
+            if (!newParticipants.contains(participantId)) {
+                throw new BusinessException("Cannot remove participant with id " + participantId + " because they have active expenses in this trip");
+            }
+        }
+        this.participantIds.clear();
+        this.participantIds.addAll(newParticipants);
+
     }
 
     public void addParticipant(UUID participantId) {

@@ -53,8 +53,8 @@ public class TripUseCaseConfig {
     }
 
     @Bean
-    public UpdateTripUseCase updateTripUseCase(TripRepository tripRepository) {
-        return new UpdateTripUseCase(tripRepository);
+    public UpdateTripUseCase updateTripUseCase(TripRepository tripRepository, ExpenseRepository expenseRepository) {
+        return new UpdateTripUseCase(tripRepository, expenseRepository);
     }
 
     @Bean
