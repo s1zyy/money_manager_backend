@@ -11,7 +11,6 @@ public interface ExpenseRepository {
     void save(Expense expense);
     void delete(Expense expense);
     Optional<Expense> findById(UUID id);
-    List<Expense> findAll();
     List<Expense> findAllByTripId(UUID id);
     Set<UUID> findActiveParticipantIds(UUID tripId);
 }

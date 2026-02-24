@@ -11,7 +11,7 @@ import vlad.corp.money_manager_backend.presentation.dto.auth.LoginRequest;
 import vlad.corp.money_manager_backend.presentation.dto.auth.LoginResponse;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/auth")
 public class AuthController {
     private final RegisterUseCase registerUseCase;
     private final LoginUseCase loginUseCase;

@@ -31,14 +31,6 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     }
 
     @Override
-    public List<Expense> findAll() {
-        return jpaRepository.findAll()
-                .stream()
-                .map(expenseMapper::toDomain)
-                .toList();
-    }
-
-    @Override
     public List<Expense> findAllByTripId(UUID id) {
         return jpaRepository.findAllByTripId(id)
                 .stream()
