@@ -9,7 +9,6 @@ import vlad.corp.money_manager_backend.infrastructure.security.AuthenticatedPart
 import vlad.corp.money_manager_backend.presentation.dto.trip.*;
 import vlad.corp.money_manager_backend.presentation.mapper.trip_mapper.TripMapperDto;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/trips")
@@ -54,11 +53,12 @@ public class TripController {
     }
 
     @PostMapping("/join")
-    public UUID join(
+    public TripDto join(
             @AuthenticationPrincipal AuthenticatedParticipant participant,
             @RequestBody JoinTripRequest request
     ) {
-        return joinTripUseCase.execute(request.code(), participant.participantId());
+        Trip trip = joinTripUseCase.execute(request.code(), participant.participantId());
+        return tripMapperDto.toDto(trip);
     }
 
     @GetMapping

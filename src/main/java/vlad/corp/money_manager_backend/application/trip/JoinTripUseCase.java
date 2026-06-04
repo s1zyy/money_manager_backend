@@ -13,7 +13,7 @@ public class JoinTripUseCase {
         this.tripRepository = tripRepository;
     }
 
-    public UUID execute(
+    public Trip execute(
             String code,
             UUID participantId
     ) {
@@ -21,6 +21,6 @@ public class JoinTripUseCase {
         Trip trip = tripRepository.findByJoinCode(joinCode)
                 .orElseThrow(() -> new NotFoundException("Trip not found with join code: " + code));
         trip.addParticipant(participantId);
-        return trip.getId();
+        return trip;
     }
 }
