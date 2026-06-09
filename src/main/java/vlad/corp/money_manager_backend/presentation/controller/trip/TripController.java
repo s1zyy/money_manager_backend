@@ -57,7 +57,7 @@ public class TripController {
             @AuthenticationPrincipal AuthenticatedParticipant participant,
             @RequestBody JoinTripRequest request
     ) {
-        Trip trip = joinTripUseCase.execute(request.code(), participant.participantId());
+        Trip trip = joinTripUseCase.execute(request.joinCode(), participant.participantId());
         return tripMapperDto.toDto(trip);
     }
 

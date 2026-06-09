@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public record CreateExpenseDto(
         BigDecimal amount,
+        UUID payerId,
         LocalDate date,
         Set<UUID> participantIds,
         String description

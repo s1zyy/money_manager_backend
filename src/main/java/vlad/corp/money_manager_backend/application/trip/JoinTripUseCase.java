@@ -21,6 +21,7 @@ public class JoinTripUseCase {
         Trip trip = tripRepository.findByJoinCode(joinCode)
                 .orElseThrow(() -> new NotFoundException("Trip not found with join code: " + code));
         trip.addParticipant(participantId);
+        tripRepository.save(trip);
         return trip;
     }
 }

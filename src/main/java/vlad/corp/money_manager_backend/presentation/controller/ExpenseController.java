@@ -39,7 +39,7 @@ public class ExpenseController {
             @RequestBody CreateExpenseDto expenseDto) {
         Expense expense = addExpenseUseCase.execute(
                 tripId,
-                participant.participantId(),
+                expenseDto.payerId(),
                 expenseDto.amount(),
                 expenseDto.date(),
                 expenseDto.participantIds(),
