@@ -8,6 +8,6 @@ import java.util.List;
 public record   TripDashboardDto (
     TripDto trip,
     BigDecimal dailyLimit,
-    List<ParticipantBalanceDto> balances,
+    List<ParticipantBalanceDto> participants,
     List<ExpenseDto> expenseDtoList
 ){}
