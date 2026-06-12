@@ -33,18 +33,18 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ExpenseDto addExpense(
+    public boolean addExpense(
             @PathVariable UUID tripId,
             @AuthenticationPrincipal AuthenticatedParticipant participant,
             @RequestBody CreateExpenseDto expenseDto) {
-        Expense expense = addExpenseUseCase.execute(
+        addExpenseUseCase.execute(
                 tripId,
                 expenseDto.payerId(),
                 expenseDto.amount(),
                 expenseDto.date(),
                 expenseDto.participantIds(),
                 expenseDto.description());
-        return expenseMapper.toDto(expense);
+        return true;
     }
 
     @GetMapping("/{expenseId}")

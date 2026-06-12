@@ -10,6 +10,7 @@ public class ExpenseMapperDto {
     public ExpenseDto toDto(Expense expense) {
         return new ExpenseDto(
                 expense.getId(),
+                expense.getTripId(),
                 expense.getPayerId(),
                 expense.getAmount().amount(),
                 expense.getDate(),

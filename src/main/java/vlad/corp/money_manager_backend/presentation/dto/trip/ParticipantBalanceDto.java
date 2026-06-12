@@ -5,7 +5,6 @@ import java.util.UUID;
 
 public record ParticipantBalanceDto(
         UUID participantId,
-        String name,
         BigDecimal balance
 ) {
 }
