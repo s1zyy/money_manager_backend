@@ -15,6 +15,8 @@ public class TripMapperDto {
                 trip.getStartDate(),
                 trip.getEndDate(),
                 trip.getParticipantIds().stream().sorted().toList(),
+                trip.getTotalBudget().getAmount(),
+                trip.getPrepaidExpenses().getAmount(),
                 trip.getJoinCode().value(),
                 trip.getStatus().name()
 
