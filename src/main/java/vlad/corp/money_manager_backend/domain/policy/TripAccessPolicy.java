@@ -33,9 +33,11 @@ public class TripAccessPolicy {
 
     public void ensureCanUpdateExpense(Trip trip, Expense expense, UUID participantId) {
         ensureNotArchived(trip);
-        ensureOwner(trip, participantId);
+        ensureParticipant(trip, participantId);
         ensureCorrectTrip(expense, trip);
-        if (!expense.getPayerId().equals(participantId)) {
+        boolean isPayer = expense.getPayerId().equals(participantId);
+        boolean isOwner = trip.getOwnerId().equals(participantId);
+        if (!isPayer && !isOwner) {
             throw new ForbiddenException("User with id: " + participantId + " is not the payer of the expense with id: " + expense.getId()); }
     }
     public void ensureCorrectTrip(Expense expense, Trip trip) {
