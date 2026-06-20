@@ -1,5 +1,6 @@
 package vlad.corp.money_manager_backend.presentation.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vlad.corp.money_manager_backend.application.expense.*;
@@ -36,7 +37,7 @@ public class ExpenseController {
     public boolean addExpense(
             @PathVariable UUID tripId,
             @AuthenticationPrincipal AuthenticatedParticipant participant,
-            @RequestBody CreateExpenseDto expenseDto) {
+            @Valid @RequestBody CreateExpenseDto expenseDto) {
         addExpenseUseCase.execute(
                 tripId,
                 expenseDto.payerId(),
@@ -69,7 +70,7 @@ public class ExpenseController {
             @PathVariable UUID tripId,
             @PathVariable UUID expenseId,
             @AuthenticationPrincipal AuthenticatedParticipant participant,
-            @RequestBody UpdateExpenseDto expenseDto) {
+            @Valid @RequestBody UpdateExpenseDto expenseDto) {
         Expense expense = updateExpenseUseCase.execute(participant.participantId(),
                 expenseId,
                 tripId,

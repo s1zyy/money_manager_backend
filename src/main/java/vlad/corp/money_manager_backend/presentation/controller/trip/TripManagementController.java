@@ -1,5 +1,6 @@
 package vlad.corp.money_manager_backend.presentation.controller.trip;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -80,7 +81,7 @@ public class TripManagementController {
     public TripDto updateTrip(
             @AuthenticationPrincipal AuthenticatedParticipant participant,
             @PathVariable UUID tripId,
-            @RequestBody UpdateTripRequest request) {
+            @Valid @RequestBody UpdateTripRequest request) {
         Trip updatedTrip = updateTripUseCase.execute(
                 participant.participantId(),
                 tripId,

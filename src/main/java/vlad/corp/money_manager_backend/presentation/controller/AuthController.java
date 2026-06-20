@@ -1,5 +1,6 @@
 package vlad.corp.money_manager_backend.presentation.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,13 +23,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public LoginResponse register(@RequestBody AuthRequest authRequest) {
+    public LoginResponse register(@Valid @RequestBody AuthRequest authRequest) {
         String token = registerUseCase.register(authRequest.email(), authRequest.password(), authRequest.name());
         return new LoginResponse(token);
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest loginRequest) {
+    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         String token = loginUseCase.login(loginRequest.email(), loginRequest.password());
         return new LoginResponse(token);
     }
