@@ -1,6 +1,7 @@
 package vlad.corp.money_manager_backend.domain.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import vlad.corp.money_manager_backend.application.exception.*;
 import vlad.corp.money_manager_backend.domain.exceptions.*;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
@@ -10,6 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Getter
+@Setter
 public class Trip {
 
     private final UUID id;

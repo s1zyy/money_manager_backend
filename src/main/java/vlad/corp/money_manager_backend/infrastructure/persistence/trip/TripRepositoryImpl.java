@@ -4,6 +4,8 @@ import org.springframework.stereotype.Repository;
 import vlad.corp.money_manager_backend.domain.model.JoinCode;
 import vlad.corp.money_manager_backend.domain.model.Trip;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,5 +45,13 @@ public class TripRepositoryImpl implements TripRepository {
                 .map(tripMapper::toDomain)
                 .toList();
 
+    }
+
+    @Override
+    public List<Trip> findUpcomingTripsStartingByDate(LocalDate today) {
+        return tripJpaRepository.findUpcomingTripsStartingByDate(today)
+                .stream()
+                .map(tripMapper::toDomain)
+                .toList();
     }
 }

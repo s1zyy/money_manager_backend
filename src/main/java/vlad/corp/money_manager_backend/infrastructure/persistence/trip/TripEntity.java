@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import vlad.corp.money_manager_backend.domain.model.TripStatus;
+import vlad.corp.money_manager_backend.infrastructure.persistence.trip.status.TripStatusEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -54,9 +54,9 @@ public class TripEntity {
     @Column(name = "join_code", nullable = false, unique = true, length = 8)
     private String joinCode;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "trip_status", nullable = false)
-    private TripStatus tripStatus;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id", nullable = false)
+    private TripStatusEntity tripStatus;
 
 
 }

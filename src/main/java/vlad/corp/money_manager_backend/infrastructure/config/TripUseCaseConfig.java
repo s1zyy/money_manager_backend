@@ -66,4 +66,7 @@ public class TripUseCaseConfig {
     public GetTripUseCase getTripUseCase(TripRepository tripRepository) {
         return new GetTripUseCase(tripRepository);
     }
+
+    @Bean
+    public UpdateTripStatusesUseCase updateTripStatusesUseCase(TripRepository tripRepository) { return new UpdateTripStatusesUseCase(tripRepository); }
 }

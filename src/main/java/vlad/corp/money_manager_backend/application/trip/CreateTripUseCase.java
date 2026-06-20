@@ -35,6 +35,8 @@ public class CreateTripUseCase {
         Set<UUID> participantIds = new HashSet<>();
         participantIds.add(ownerId);
 
+        TripStatus initialStatus = determineInitialStatus(startDate);
+
         Trip trip = new Trip(
                 UUID.randomUUID(),
                 ownerId,
@@ -45,10 +47,21 @@ public class CreateTripUseCase {
                 prepaidExpensesMoney,
                 participantIds,
                 joinCode,
-                TripStatus.ACTIVE
+                initialStatus
         );
         tripRepository.save(trip);
         return trip;
 
+    }
+
+    private TripStatus determineInitialStatus(LocalDate startDate) {
+        if(startDate == null) {
+            return TripStatus.ACTIVE;
+        }
+        LocalDate now = LocalDate.now();
+        if(startDate.isAfter(now)) {
+            return TripStatus.UPCOMING;
+        }
+        return TripStatus.ACTIVE;
     }
 }
