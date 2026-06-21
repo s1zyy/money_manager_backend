@@ -1,10 +1,7 @@
 package vlad.corp.money_manager_backend.infrastructure.persistence.trip;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import vlad.corp.money_manager_backend.infrastructure.persistence.trip.status.TripStatusEntity;
 
 import java.math.BigDecimal;
@@ -14,7 +11,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "trips")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -40,6 +38,10 @@ public class TripEntity {
 
     @Column(name = "prepaid_expenses")
     private BigDecimal prepaidExpenses;
+
+    @Column(name = "currency", length = 3, nullable = false)
+    private String currency;
+
 
 
 

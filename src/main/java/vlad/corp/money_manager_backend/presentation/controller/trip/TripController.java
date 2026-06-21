@@ -40,7 +40,8 @@ public class TripController {
                 request.totalBudget(),
                 request.prepaidExpenses(),
                 request.startDate(),
-                request.endDate()
+                request.endDate(),
+                request.currency()
         );
         return new CreateTripResult(
                 trip.getId(),

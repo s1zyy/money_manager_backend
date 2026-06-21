@@ -25,7 +25,8 @@ public class CreateTripUseCase {
             BigDecimal totalBudget,
             BigDecimal prepaidExpenses,
             LocalDate startDate,
-            LocalDate endDate
+            LocalDate endDate,
+            String currency
     ) {
         JoinCode joinCode = joinCodeGenerator.generate();
         Money totalBudgetMoney = new Money(totalBudget);
@@ -47,7 +48,9 @@ public class CreateTripUseCase {
                 prepaidExpensesMoney,
                 participantIds,
                 joinCode,
-                initialStatus
+                initialStatus,
+                currency
+
         );
         tripRepository.save(trip);
         return trip;

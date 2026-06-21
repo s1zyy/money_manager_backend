@@ -14,6 +14,7 @@ public record TripDto(
         List<UUID> participantIds,
         BigDecimal totalBudget,
         BigDecimal prepaidExpenses,
+        String currency,
         String joinCode,
         String status
 ){}

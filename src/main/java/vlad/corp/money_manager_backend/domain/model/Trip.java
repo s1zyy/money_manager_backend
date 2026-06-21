@@ -21,11 +21,12 @@ public class Trip {
     private LocalDate endDate;
     private Money totalBudget;
     private Money prepaidExpenses;
+    private String currency;
     private Set<UUID> participantIds;
     private final JoinCode joinCode;
     private TripStatus status;
 
-    public Trip(UUID id, UUID ownerId, String name, LocalDate startDate, LocalDate endDate, Money totalBudget, Money prepaidExpenses, Set<UUID> participantIds, JoinCode joinCode, TripStatus status) {
+    public Trip(UUID id, UUID ownerId, String name, LocalDate startDate, LocalDate endDate, Money totalBudget, Money prepaidExpenses, Set<UUID> participantIds, JoinCode joinCode, TripStatus status, String currency) {
         this.id = id;
         this.ownerId = ownerId;
         this.name = name;
@@ -36,6 +37,7 @@ public class Trip {
         this.participantIds = participantIds;
         this.joinCode = joinCode;
         this.status = Objects.requireNonNull(status, "Trip status must not be null");
+        this.currency = currency;
     }
 
     public void archive(UUID participantId) {

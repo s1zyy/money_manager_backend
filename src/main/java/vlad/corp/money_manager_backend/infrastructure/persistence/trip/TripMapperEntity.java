@@ -25,6 +25,7 @@ public class TripMapperEntity {
                 trip.getEndDate(),
                 trip.getTotalBudget().getAmount(),
                 trip.getPrepaidExpenses().getAmount(),
+                trip.getCurrency(),
                 new HashSet<>(trip.getParticipantIds()),
                 trip.getJoinCode().value(),
                 new TripStatusEntity(statusId, trip.getStatus())
@@ -41,7 +42,8 @@ public class TripMapperEntity {
                 new Money(tripEntity.getPrepaidExpenses()),
                 new HashSet<>(tripEntity.getParticipantIds()),
                 new JoinCode(tripEntity.getJoinCode()),
-                tripEntity.getTripStatus().getCode()
+                tripEntity.getTripStatus().getCode(),
+                tripEntity.getCurrency()
         );
     }
 

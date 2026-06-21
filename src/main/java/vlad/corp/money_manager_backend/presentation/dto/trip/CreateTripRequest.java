@@ -12,5 +12,6 @@ public record CreateTripRequest(
         @NotNull @DecimalMin("0") BigDecimal totalBudget,
         @NotNull @DecimalMin("0") BigDecimal prepaidExpenses,
         LocalDate startDate,
-        LocalDate endDate
+        LocalDate endDate,
+        String currency
 ) {}
