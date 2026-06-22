@@ -39,11 +39,19 @@ public class GetTripDashboardUseCase {
 
         Map<UUID, Money> balances = calculateBalancesUseCase.execute(trip, expenses);
 
+        boolean isOwner = trip.getOwnerId().equals(participantId);
+        boolean involvedInExpenses = expenses.stream().anyMatch(e->
+                 e.getPayerId().equals(participantId) || e.getParticipantIds().contains(participantId)
+        );
+        boolean canLeave = !isOwner && !involvedInExpenses;
+
         return new TripDashboard(
                 trip,
                 dailyLimit,
                 balances,
-                expenses
+                expenses,
+                isOwner,
+                canLeave
         );
     }
 

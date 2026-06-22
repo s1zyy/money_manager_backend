@@ -9,5 +9,7 @@ public record   TripDashboardDto (
     TripDto trip,
     BigDecimal dailyLimit,
     List<ParticipantBalanceDto> participants,
-    List<ExpenseDto> expenseDtoList
+    List<ExpenseDto> expenseDtoList,
+    boolean isOwner,
+    boolean canLeave
 ){}

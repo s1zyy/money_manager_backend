@@ -25,7 +25,9 @@ public class TripDashboardMapper {
                         .toList(),
                 dashboard.expenses().stream()
                         .map(expenseMapperDto::toDto)
-                        .toList()
+                        .toList(),
+                dashboard.isOwner(),
+                dashboard.canLeave()
         );
 
     }

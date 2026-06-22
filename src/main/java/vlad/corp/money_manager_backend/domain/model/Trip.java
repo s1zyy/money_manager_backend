@@ -80,9 +80,8 @@ public class Trip {
         }
     }
 
-    public void updateDates(LocalDate start, LocalDate end) {
+    public void updateEndDate(LocalDate end) {
         ensureNotArchived();
-        if (start != null) this.startDate = start;
         if (end != null) this.endDate = end;
     }
 

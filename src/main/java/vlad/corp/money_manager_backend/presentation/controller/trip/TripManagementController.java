@@ -88,9 +88,8 @@ public class TripManagementController {
                 request.name(),
                 request.budget(),
                 request.prepaidExpenses(),
-                request.participantIds(),
-                request.startDate(),
-                request.endDate());
+                request.endDate(),
+                request.currency());
         return tripMapperDto.toDto(updatedTrip);
     }
 }

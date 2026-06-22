@@ -12,5 +12,8 @@ public record TripDashboard(
         Trip trip,
         Money dailyLimit,
         Map<UUID, Money> balances,
-        List<Expense> expenses
+        List<Expense> expenses,
+        boolean isOwner,
+        boolean canLeave
+
 ) {}
