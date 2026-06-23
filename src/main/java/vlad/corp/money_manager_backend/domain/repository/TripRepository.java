@@ -15,4 +15,6 @@ public interface TripRepository {
     List<Trip> findAllTripsForUser(UUID userId);
 
     List<Trip> findUpcomingTripsStartingByDate(LocalDate today);
+
+    void deleteById(UUID id);
 }

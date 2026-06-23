@@ -1,6 +1,7 @@
 package vlad.corp.money_manager_backend.infrastructure.persistence.expense;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import vlad.corp.money_manager_backend.domain.model.Expense;
 import vlad.corp.money_manager_backend.domain.repository.ExpenseRepository;
 import java.util.*;
@@ -43,5 +44,11 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
         Set<UUID> ids = new HashSet<>(jpaRepository.findDistinctParticipantsInExpenses(tripId));
         ids.addAll(jpaRepository.findDistinctPayersInExpenses(tripId));
         return ids;
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllByTripId(UUID tripId) {
+        jpaRepository.deleteAllByTripId(tripId);
     }
 }

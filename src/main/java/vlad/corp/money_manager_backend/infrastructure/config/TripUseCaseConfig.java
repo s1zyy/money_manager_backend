@@ -35,6 +35,11 @@ public class TripUseCaseConfig {
     }
 
     @Bean
+    public DeleteTripUseCase deleteTripUseCase(TripRepository tripRepository, ExpenseRepository expenseRepository) {
+        return new DeleteTripUseCase(tripRepository, expenseRepository);
+    }
+
+    @Bean
     public CreateTripUseCase createTripUseCase(TripRepository tripRepository, JoinCodeGenerator joinCodeGenerator) {
         return new CreateTripUseCase(tripRepository, joinCodeGenerator);
     }

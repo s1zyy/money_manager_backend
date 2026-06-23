@@ -54,4 +54,10 @@ public class TripRepositoryImpl implements TripRepository {
                 .map(tripMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        tripJpaRepository.deleteById(id);
+
+    }
 }

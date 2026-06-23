@@ -26,10 +26,11 @@ public class TripManagementController {
     private final LeaveTripUseCase leaveTripUseCase;
     private final GetTripUseCase getTripUseCase;
     private final TripMapperDto tripMapperDto;
+    private final DeleteTripUseCase deleteTripUseCase;
 
 
 
-    public TripManagementController(GetTripDashboardUseCase getTripDashboardUseCase, UpdateTripUseCase updateTripUseCase, TripDashboardMapper tripDashboardMapper, ArchiveTripUseCase archiveTripUseCase, LeaveTripUseCase leaveTripUseCase, GetTripUseCase getTripUseCase, TripMapperDto tripMapperDto) {
+    public TripManagementController(GetTripDashboardUseCase getTripDashboardUseCase, UpdateTripUseCase updateTripUseCase, TripDashboardMapper tripDashboardMapper, ArchiveTripUseCase archiveTripUseCase, LeaveTripUseCase leaveTripUseCase, GetTripUseCase getTripUseCase, TripMapperDto tripMapperDto, DeleteTripUseCase deleteTripUseCase) {
         this.getTripDashboardUseCase = getTripDashboardUseCase;
         this.updateTripUseCase = updateTripUseCase;
         this.tripDashboardMapper = tripDashboardMapper;
@@ -37,6 +38,7 @@ public class TripManagementController {
         this.leaveTripUseCase = leaveTripUseCase;
         this.getTripUseCase = getTripUseCase;
         this.tripMapperDto = tripMapperDto;
+        this.deleteTripUseCase = deleteTripUseCase;
     }
 
 
@@ -91,5 +93,14 @@ public class TripManagementController {
                 request.endDate(),
                 request.currency());
         return tripMapperDto.toDto(updatedTrip);
+    }
+
+    @DeleteMapping("/{tripId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTrip(
+            @AuthenticationPrincipal AuthenticatedParticipant participant,
+            @PathVariable UUID tripId
+    ) {
+        deleteTripUseCase.execute(tripId, participant.participantId());
     }
 }
