@@ -5,5 +5,6 @@ import java.util.UUID;
 public record ParticipantDto(
          UUID id,
          String name,
-         String email) {
+         String email,
+         boolean isVirtual) {
 }

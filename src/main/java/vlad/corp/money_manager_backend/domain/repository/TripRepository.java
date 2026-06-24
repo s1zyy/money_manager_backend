@@ -17,4 +17,5 @@ public interface TripRepository {
     List<Trip> findUpcomingTripsStartingByDate(LocalDate today);
 
     void deleteById(UUID id);
+
 }

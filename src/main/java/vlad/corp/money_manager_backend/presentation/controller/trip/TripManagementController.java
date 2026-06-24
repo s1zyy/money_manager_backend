@@ -23,19 +23,17 @@ public class TripManagementController {
     private final UpdateTripUseCase updateTripUseCase;
     private final TripDashboardMapper tripDashboardMapper;
     private final ArchiveTripUseCase archiveTripUseCase;
-    private final LeaveTripUseCase leaveTripUseCase;
     private final GetTripUseCase getTripUseCase;
     private final TripMapperDto tripMapperDto;
     private final DeleteTripUseCase deleteTripUseCase;
 
 
 
-    public TripManagementController(GetTripDashboardUseCase getTripDashboardUseCase, UpdateTripUseCase updateTripUseCase, TripDashboardMapper tripDashboardMapper, ArchiveTripUseCase archiveTripUseCase, LeaveTripUseCase leaveTripUseCase, GetTripUseCase getTripUseCase, TripMapperDto tripMapperDto, DeleteTripUseCase deleteTripUseCase) {
+    public TripManagementController(GetTripDashboardUseCase getTripDashboardUseCase, UpdateTripUseCase updateTripUseCase, TripDashboardMapper tripDashboardMapper, ArchiveTripUseCase archiveTripUseCase, GetTripUseCase getTripUseCase, TripMapperDto tripMapperDto, DeleteTripUseCase deleteTripUseCase) {
         this.getTripDashboardUseCase = getTripDashboardUseCase;
         this.updateTripUseCase = updateTripUseCase;
         this.tripDashboardMapper = tripDashboardMapper;
         this.archiveTripUseCase = archiveTripUseCase;
-        this.leaveTripUseCase = leaveTripUseCase;
         this.getTripUseCase = getTripUseCase;
         this.tripMapperDto = tripMapperDto;
         this.deleteTripUseCase = deleteTripUseCase;
@@ -51,14 +49,6 @@ public class TripManagementController {
         return tripMapperDto.toDto(trip);
     }
 
-    @PostMapping("/{tripId}/leave")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void leaveTrip(
-            @AuthenticationPrincipal AuthenticatedParticipant participant,
-            @PathVariable UUID tripId
-    ) {
-        leaveTripUseCase.execute(tripId, participant.participantId());
-    }
 
 
     @GetMapping("/{tripId}/dashboard")

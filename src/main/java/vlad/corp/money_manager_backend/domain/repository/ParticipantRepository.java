@@ -11,5 +11,6 @@ public interface ParticipantRepository {
     Optional<Participant> findByEmail(String email);
     Optional<Participant> findById(UUID id);
     Set<Participant>  findAllByIds(Set<UUID> ids);
+    void deleteById(UUID id);
 
 }

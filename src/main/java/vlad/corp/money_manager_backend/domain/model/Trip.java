@@ -61,10 +61,18 @@ public class Trip {
 
     public void leave(UUID participantId) {
         ensureNotArchived();
-        if(ownerId.equals(participantId)) {
-            throw new OwnerCannotLeaveTripException("Owner cannot leave the trip. Consider archiving the trip instead.");
-        }
+        ensureParticipant(participantId);
+        ensureNotOwner(participantId);
         participantIds.remove(participantId);
+    }
+
+    public void removeParticipant(UUID ownerId, UUID toRemove) {
+        ensureNotArchived();
+        ensureOwner(ownerId);
+        ensureParticipant(toRemove);
+        ensureNotOwner(toRemove);
+
+        participantIds.remove(toRemove);
     }
 
     public void updateName(String newName) {
@@ -79,6 +87,11 @@ public class Trip {
             throw new ForbiddenException("Only the owner can perform this action");
         }
     }
+    public void ensureNotOwner(UUID participantId) {
+        if(ownerId.equals(participantId)) {
+            throw new OwnerCannotLeaveTripException("Owner cannot perform this action");
+        }
+    }
 
     public void updateEndDate(LocalDate end) {
         ensureNotArchived();
@@ -91,20 +104,6 @@ public class Trip {
         if (prepaid != null) this.prepaidExpenses = prepaid;
     }
 
-    public void updateParticipants(Set<UUID> newParticipants, Set<UUID> activeParticipantIds) {
-        ensureNotArchived();
-        if (!newParticipants.contains(this.ownerId)) {
-            throw new BusinessException("Owner must remain in participants");
-        }
-        for (UUID participantId : activeParticipantIds) {
-            if (!newParticipants.contains(participantId)) {
-                throw new BusinessException("Cannot remove participant with id " + participantId + " because they have active expenses in this trip");
-            }
-        }
-        this.participantIds.clear();
-        this.participantIds.addAll(newParticipants);
-
-    }
 
     public void addParticipant(UUID participantId) {
         ensureNotArchived();

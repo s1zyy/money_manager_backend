@@ -43,4 +43,9 @@ public class ParticipantRepositoryImpl implements ParticipantRepository {
                 .collect(Collectors.toSet());
     }
 
+    @Override
+    public void deleteById(UUID id) {
+        jpaRepository.deleteById(id);
+    }
+
 }

@@ -16,7 +16,6 @@ public class LeaveTripUseCase {
     public void execute(UUID tripId, UUID participantId) {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new NotFoundException("Trip with id " + tripId + " not found"));
-        trip.ensureParticipant(participantId);
         trip.leave(participantId);
         tripRepository.save(trip);
     }

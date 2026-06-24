@@ -30,6 +30,16 @@ public class TripUseCaseConfig {
     }
 
     @Bean
+    public RemoveParticipantUseCase removeParticipantUseCase(TripRepository tripRepository, ExpenseRepository expenseRepository, ParticipantRepository participantRepository) {
+        return new RemoveParticipantUseCase(tripRepository, expenseRepository, participantRepository);
+    }
+
+    @Bean
+    public AddVirtualParticipantUseCase addVirtualParticipantUseCase(TripRepository tripRepository, ParticipantRepository participantRepository) {
+        return new AddVirtualParticipantUseCase(tripRepository, participantRepository);
+    }
+
+    @Bean
     public ArchiveTripUseCase archiveTripUseCase(TripRepository tripRepository) {
         return new ArchiveTripUseCase(tripRepository);
     }

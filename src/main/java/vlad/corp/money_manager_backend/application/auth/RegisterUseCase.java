@@ -24,7 +24,7 @@ public class RegisterUseCase {
         if(participantRepository.findByEmail(email).isPresent()) {
             throw new ParticipantAlreadyExistException("Participant with email " + email + " already exists");
         }
-        Participant participant = new Participant(UUID.randomUUID(), name, email, passwordEncoder.encode(password));
+        Participant participant = new Participant(UUID.randomUUID(), name, email, passwordEncoder.encode(password), false);
         participantRepository.save(participant);
         return tokenGenerator.generateToken(participant, List.of("ROLE_USER"));
 

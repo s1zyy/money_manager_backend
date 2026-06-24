@@ -10,7 +10,8 @@ public class ParticipantMapperDto {
         return new ParticipantDto(
                 participant.getId(),
                 participant.getName(),
-                participant.getEmail()
+                participant.getEmail(),
+                participant.isVirtual()
         );
     }
 }
