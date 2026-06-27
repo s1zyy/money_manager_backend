@@ -1,6 +1,5 @@
 <p align="center">
   <h1 align="center">💸 Trip Expense Splitter — Backend</h1>
-  <p align="center">REST API для совместного учёта расходов в путешествиях</p>
 </p>
 
 <p align="center">
