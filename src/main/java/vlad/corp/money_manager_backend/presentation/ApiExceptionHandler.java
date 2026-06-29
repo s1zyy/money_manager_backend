@@ -65,7 +65,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleGeneric(Exception ex){
-        return new ErrorResponse("Internal server error, message: " + ex.getMessage());
+        return new ErrorResponse("Internal server error");
     }
 
 

@@ -1,7 +1,9 @@
 package vlad.corp.money_manager_backend.application.trip;
 
 import vlad.corp.money_manager_backend.application.exception.NotFoundException;
+import vlad.corp.money_manager_backend.domain.exceptions.BusinessException;
 import vlad.corp.money_manager_backend.domain.model.Trip;
+import vlad.corp.money_manager_backend.domain.model.TripStatus;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
 import java.math.BigDecimal;
@@ -22,37 +24,56 @@ public class UpdateTripUseCase {
             String name,
             BigDecimal totalBudgetDecimal,
             BigDecimal prepaidExpensesDecimal,
+            LocalDate startDate,
             LocalDate endDate,
             String currency
-
     ) {
-
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new NotFoundException("Trip not found with id: " + tripId));
 
         trip.ensureOwner(participantId);
 
-        Money totalBudget = totalBudgetDecimal!=null ? new Money(totalBudgetDecimal) : null;
-        Money prepaidExpenses = prepaidExpensesDecimal!=null ? new Money(prepaidExpensesDecimal) : null;
+        Money totalBudget = totalBudgetDecimal != null ? new Money(totalBudgetDecimal) : null;
+        Money prepaidExpenses = prepaidExpensesDecimal != null ? new Money(prepaidExpensesDecimal) : null;
         trip.updateBudget(totalBudget, prepaidExpenses);
 
         String nameReal = name != null ? name : trip.getName();
         trip.updateName(nameReal);
 
-        LocalDate newEnd = (endDate != null) ? endDate : trip.getEndDate();
-        if (newEnd.isBefore(trip.getStartDate())) {
-            throw new IllegalArgumentException("Invalid date range");
-        }
-        trip.updateEndDate(newEnd);
-
-
-        if(currency != null && !currency.isBlank()) {
+        if (currency != null && !currency.isBlank()) {
             trip.setCurrency(currency);
         }
 
+        applyDateConstraints(trip, startDate, endDate, tripId);
 
         tripRepository.save(trip);
-
         return trip;
+    }
+
+    private void applyDateConstraints(Trip trip, LocalDate startDate, LocalDate endDate, UUID tripId) {
+        if (trip.getStatus() == TripStatus.UPCOMING) {
+            LocalDate newStart = startDate != null ? startDate : trip.getStartDate();
+            LocalDate newEnd = endDate != null ? endDate : trip.getEndDate();
+            LocalDate tomorrow = LocalDate.now().plusDays(1);
+            LocalDate minEnd = newStart.plusDays(1).isAfter(tomorrow) ? newStart.plusDays(1) : tomorrow;
+            if (newEnd.isBefore(minEnd)) {
+                throw new BusinessException("End date must be at least tomorrow");
+            }
+            if(!newStart.isAfter(LocalDate.now())) {
+                trip.setStatus(TripStatus.ACTIVE);
+            }
+            trip.updateStartDate(newStart);
+            trip.updateEndDate(newEnd);
+        } else if (trip.getStatus() == TripStatus.ACTIVE) {
+            if (startDate != null && !startDate.equals(trip.getStartDate())) {
+                throw new BusinessException("Cannot change start date of an active trip");
+            }
+            if (endDate != null) {
+                if (!endDate.isAfter(LocalDate.now())) {
+                    throw new BusinessException("End date must be at least tomorrow");
+                }
+                trip.updateEndDate(endDate);
+            }
+        }
     }
 }

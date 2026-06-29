@@ -7,6 +7,7 @@ public record UpdateTripRequest(
         String name,
         BigDecimal budget,
         BigDecimal prepaidExpenses,
+        LocalDate startDate,
         LocalDate endDate,
         String currency
 ){}

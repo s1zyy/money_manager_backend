@@ -80,6 +80,7 @@ public class TripManagementController {
                 request.name(),
                 request.budget(),
                 request.prepaidExpenses(),
+                request.startDate(),
                 request.endDate(),
                 request.currency());
         return tripMapperDto.toDto(updatedTrip);
