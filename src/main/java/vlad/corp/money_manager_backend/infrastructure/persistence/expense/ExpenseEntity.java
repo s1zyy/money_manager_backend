@@ -1,20 +1,17 @@
 package vlad.corp.money_manager_backend.infrastructure.persistence.expense;
 
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
 @Table(name = "expenses")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -32,18 +29,21 @@ public class ExpenseEntity {
     @Column(name = "payer_id")
     private UUID payerId;
 
+    @Column(name = "split_mode", nullable = false)
+    private String splitMode;
+
     @ElementCollection
     @CollectionTable(
             name = "expense_participants",
             joinColumns = @JoinColumn(name = "expense_id")
     )
-    @Column(name = "participant_id", nullable = false)
-    private Set<UUID> participantIds;
+    @MapKeyColumn(name = "participant_id")
+    @Column(name = "amount", nullable = true)
+    private Map<UUID, BigDecimal> participantShares;
 
     @Column(name = "date")
     private LocalDate date;
 
     @Column(name = "description")
     private String description;
-
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/trips/{tripId}/expenses" )
+@RequestMapping("/api/trips/{tripId}/expenses")
 public class ExpenseController {
     private final AddExpenseUseCase addExpenseUseCase;
     private final DeleteExpenseUseCase deleteExpenseUseCase;
@@ -24,7 +24,9 @@ public class ExpenseController {
     private final ListExpensesUseCase listExpensesUseCase;
     private final ExpenseMapperDto expenseMapper;
 
-    public ExpenseController(AddExpenseUseCase addExpenseUseCase, DeleteExpenseUseCase deleteExpenseUseCase, GetExpenseUseCase getExpenseUseCase, UpdateExpenseUseCase updateExpenseUseCase, ListExpensesUseCase listExpensesUseCase, ExpenseMapperDto expenseMapper) {
+    public ExpenseController(AddExpenseUseCase addExpenseUseCase, DeleteExpenseUseCase deleteExpenseUseCase,
+                             GetExpenseUseCase getExpenseUseCase, UpdateExpenseUseCase updateExpenseUseCase,
+                             ListExpensesUseCase listExpensesUseCase, ExpenseMapperDto expenseMapper) {
         this.addExpenseUseCase = addExpenseUseCase;
         this.deleteExpenseUseCase = deleteExpenseUseCase;
         this.getExpenseUseCase = getExpenseUseCase;
@@ -43,7 +45,9 @@ public class ExpenseController {
                 expenseDto.payerId(),
                 expenseDto.amount(),
                 expenseDto.date(),
+                expenseDto.splitMode(),
                 expenseDto.participantIds(),
+                expenseDto.customShares(),
                 expenseDto.description());
         return true;
     }
@@ -71,24 +75,24 @@ public class ExpenseController {
             @PathVariable UUID expenseId,
             @AuthenticationPrincipal AuthenticatedParticipant participant,
             @Valid @RequestBody UpdateExpenseDto expenseDto) {
-        Expense expense = updateExpenseUseCase.execute(participant.participantId(),
+        Expense expense = updateExpenseUseCase.execute(
+                participant.participantId(),
                 expenseId,
                 tripId,
                 expenseDto.date(),
                 expenseDto.amount(),
+                expenseDto.splitMode(),
                 expenseDto.newParticipantIds(),
+                expenseDto.customShares(),
                 expenseDto.description());
         return expenseMapper.toDto(expense);
     }
-
 
     @DeleteMapping("/{expenseId}")
     public void deleteExpense(
             @PathVariable UUID tripId,
             @PathVariable UUID expenseId,
-            @AuthenticationPrincipal AuthenticatedParticipant participant
-    ) {
+            @AuthenticationPrincipal AuthenticatedParticipant participant) {
         deleteExpenseUseCase.execute(participant.participantId(), expenseId, tripId);
     }
-
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface ExpenseJpaRepository extends JpaRepository<ExpenseEntity, UUID> {
     Set<ExpenseEntity> findAllByTripId(UUID id);
-    @Query("SELECT DISTINCT p FROM ExpenseEntity e JOIN e.participantIds p WHERE e.tripId = :tripId")
+    @Query("SELECT DISTINCT KEY(ps) FROM ExpenseEntity e JOIN e.participantShares ps WHERE e.tripId = :tripId")
     Set<UUID> findDistinctParticipantsInExpenses(@Param("tripId") UUID tripId);
     @Query("SELECT DISTINCT e.payerId FROM ExpenseEntity e WHERE e.tripId = :tripId")
     Set<UUID> findDistinctPayersInExpenses(@Param("tripId") UUID tripId);

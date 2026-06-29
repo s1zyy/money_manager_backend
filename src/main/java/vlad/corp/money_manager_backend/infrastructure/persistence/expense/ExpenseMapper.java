@@ -2,8 +2,10 @@ package vlad.corp.money_manager_backend.infrastructure.persistence.expense;
 
 import org.springframework.stereotype.Component;
 import vlad.corp.money_manager_backend.domain.model.Expense;
+import vlad.corp.money_manager_backend.domain.model.SplitMode;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
-import java.util.HashSet;
+
+import java.util.HashMap;
 
 @Component
 public class ExpenseMapper {
@@ -14,7 +16,8 @@ public class ExpenseMapper {
                 entity.getTripId(),
                 new Money(entity.getAmount()),
                 entity.getPayerId(),
-                new HashSet<>(entity.getParticipantIds()),
+                SplitMode.valueOf(entity.getSplitMode()),
+                new HashMap<>(entity.getParticipantShares()),
                 entity.getDate(),
                 entity.getDescription()
         );
@@ -24,9 +27,10 @@ public class ExpenseMapper {
         return new ExpenseEntity(
                 domain.getId(),
                 domain.getTripId(),
-                domain.getAmount().getAmount(),
+                domain.getAmount().amount(),
                 domain.getPayerId(),
-                new HashSet<>(domain.getParticipantIds()),
+                domain.getSplitMode().name(),
+                new HashMap<>(domain.getParticipantShares()),
                 domain.getDate(),
                 domain.getDescription()
         );

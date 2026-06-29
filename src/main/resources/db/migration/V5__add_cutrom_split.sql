@@ -1,0 +1,3 @@
+ALTER TABLE expenses ADD COLUMN split_mode VARCHAR(20) NOT NULL DEFAULT 'EQUAL';
+ALTER TABLE expense_participants ADD COLUMN amount DECIMAL(19, 2);
+
