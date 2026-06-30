@@ -47,6 +47,14 @@ public class Trip {
         this.status = TripStatus.ARCHIVED;
     }
 
+    public void unarchive(UUID participantId) {
+        if (!ownerId.equals(participantId)) {
+            throw new OnlyOwnerCanArchiveTripException(participantId);
+        }
+        LocalDate today = LocalDate.now();
+        this.status = today.isBefore(startDate) ? TripStatus.UPCOMING : TripStatus.ACTIVE;
+    }
+
     public void ensureNotArchived() {
         if (this.status == TripStatus.ARCHIVED) {
             throw new ArchivedTripException("Trip with id " + this.id + " is archived and can't be modified.");

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import vlad.corp.money_manager_backend.application.calculator.CalculateBalancesUseCase;
 import vlad.corp.money_manager_backend.application.calculator.CalculateDailyLimitUseCase;
+import vlad.corp.money_manager_backend.application.calculator.CalculateSettlementUseCase;
 import vlad.corp.money_manager_backend.application.port.JoinCodeGenerator;
 import vlad.corp.money_manager_backend.application.trip.*;
 import vlad.corp.money_manager_backend.domain.policy.TripAccessPolicy;
@@ -84,4 +85,14 @@ public class TripUseCaseConfig {
 
     @Bean
     public UpdateTripStatusesUseCase updateTripStatusesUseCase(TripRepository tripRepository) { return new UpdateTripStatusesUseCase(tripRepository); }
+
+    @Bean
+    public UnarchiveTripUseCase unarchiveTripUseCase(TripRepository tripRepository) {
+        return new UnarchiveTripUseCase(tripRepository);
+    }
+
+    @Bean
+    public GetTripSettlementUseCase getTripSettlementUseCase(TripRepository tripRepository, ExpenseRepository expenseRepository, ParticipantRepository participantRepository, CalculateBalancesUseCase calculateBalancesUseCase, CalculateSettlementUseCase calculateSettlementUseCase) {
+        return new GetTripSettlementUseCase(tripRepository, expenseRepository, participantRepository, calculateBalancesUseCase, calculateSettlementUseCase);
+    }
 }

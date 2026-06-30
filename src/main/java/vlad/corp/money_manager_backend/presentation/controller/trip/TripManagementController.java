@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import vlad.corp.money_manager_backend.application.trip.*;
 import vlad.corp.money_manager_backend.domain.model.Trip;
 import vlad.corp.money_manager_backend.infrastructure.security.AuthenticatedParticipant;
+import vlad.corp.money_manager_backend.presentation.dto.trip.SettlementTransferDto;
 import vlad.corp.money_manager_backend.presentation.dto.trip.TripDashboardDto;
 import vlad.corp.money_manager_backend.presentation.dto.trip.TripDto;
 import vlad.corp.money_manager_backend.presentation.dto.trip.UpdateTripRequest;
 import vlad.corp.money_manager_backend.presentation.mapper.trip_mapper.TripDashboardMapper;
 import vlad.corp.money_manager_backend.presentation.mapper.trip_mapper.TripMapperDto;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,10 +28,10 @@ public class TripManagementController {
     private final GetTripUseCase getTripUseCase;
     private final TripMapperDto tripMapperDto;
     private final DeleteTripUseCase deleteTripUseCase;
+    private final GetTripSettlementUseCase getTripSettlementUseCase;
+    private final UnarchiveTripUseCase unarchiveTripUseCase;
 
-
-
-    public TripManagementController(GetTripDashboardUseCase getTripDashboardUseCase, UpdateTripUseCase updateTripUseCase, TripDashboardMapper tripDashboardMapper, ArchiveTripUseCase archiveTripUseCase, GetTripUseCase getTripUseCase, TripMapperDto tripMapperDto, DeleteTripUseCase deleteTripUseCase) {
+    public TripManagementController(GetTripDashboardUseCase getTripDashboardUseCase, UpdateTripUseCase updateTripUseCase, TripDashboardMapper tripDashboardMapper, ArchiveTripUseCase archiveTripUseCase, GetTripUseCase getTripUseCase, TripMapperDto tripMapperDto, DeleteTripUseCase deleteTripUseCase, GetTripSettlementUseCase getTripSettlementUseCase, UnarchiveTripUseCase unarchiveTripUseCase) {
         this.getTripDashboardUseCase = getTripDashboardUseCase;
         this.updateTripUseCase = updateTripUseCase;
         this.tripDashboardMapper = tripDashboardMapper;
@@ -37,8 +39,19 @@ public class TripManagementController {
         this.getTripUseCase = getTripUseCase;
         this.tripMapperDto = tripMapperDto;
         this.deleteTripUseCase = deleteTripUseCase;
+        this.getTripSettlementUseCase = getTripSettlementUseCase;
+        this.unarchiveTripUseCase = unarchiveTripUseCase;
     }
 
+
+    @PostMapping("/{tripId}/unarchive")
+    public TripDto unarchiveTrip(
+            @AuthenticationPrincipal AuthenticatedParticipant participant,
+            @PathVariable UUID tripId
+    ) {
+        Trip trip = unarchiveTripUseCase.execute(tripId, participant.participantId());
+        return tripMapperDto.toDto(trip);
+    }
 
     @PostMapping("/{tripId}/archive")
     public TripDto archiveTrip(
@@ -84,6 +97,23 @@ public class TripManagementController {
                 request.endDate(),
                 request.currency());
         return tripMapperDto.toDto(updatedTrip);
+    }
+
+    @GetMapping("/{tripId}/settlement")
+    public List<SettlementTransferDto> getTripSettlement(
+            @AuthenticationPrincipal AuthenticatedParticipant participant,
+            @PathVariable UUID tripId
+    ) {
+        TripSettlement settlement = getTripSettlementUseCase.execute(tripId, participant.participantId());
+        return settlement.transfers().stream()
+                .map(t -> new SettlementTransferDto(
+                        t.fromId(),
+                        settlement.participantNames().getOrDefault(t.fromId(), "Unknown"),
+                        t.toId(),
+                        settlement.participantNames().getOrDefault(t.toId(), "Unknown"),
+                        t.amount().amount()
+                ))
+                .toList();
     }
 
     @DeleteMapping("/{tripId}")
