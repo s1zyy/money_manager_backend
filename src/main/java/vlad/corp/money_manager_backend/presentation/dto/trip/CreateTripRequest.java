@@ -9,8 +9,7 @@ import java.time.LocalDate;
 
 public record CreateTripRequest(
         @NotBlank String name,
-        @NotNull @DecimalMin("0") BigDecimal totalBudget,
-        @NotNull @DecimalMin("0") BigDecimal prepaidExpenses,
+        @NotNull @DecimalMin("0") BigDecimal budget,
         LocalDate startDate,
         LocalDate endDate,
         String currency

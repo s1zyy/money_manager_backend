@@ -19,9 +19,8 @@ public class TripController {
     private final ListMyTripsUseCase listMyTripsUseCase;
     private final TripMapperDto tripMapperDto;
 
-
-
-    public TripController(JoinTripUseCase joinTripUseCase, CreateTripUseCase createTripUseCase, ListMyTripsUseCase listMyTripsUseCase, TripMapperDto tripMapperDto) {
+    public TripController(JoinTripUseCase joinTripUseCase, CreateTripUseCase createTripUseCase,
+                          ListMyTripsUseCase listMyTripsUseCase, TripMapperDto tripMapperDto) {
         this.joinTripUseCase = joinTripUseCase;
         this.createTripUseCase = createTripUseCase;
         this.listMyTripsUseCase = listMyTripsUseCase;
@@ -33,12 +32,11 @@ public class TripController {
     public CreateTripResult create(
             @AuthenticationPrincipal AuthenticatedParticipant participant,
             @Valid @RequestBody CreateTripRequest request
-            ) {
+    ) {
         Trip trip = createTripUseCase.execute(
                 participant.participantId(),
                 request.name(),
-                request.totalBudget(),
-                request.prepaidExpenses(),
+                request.budget(),
                 request.startDate(),
                 request.endDate(),
                 request.currency()
@@ -51,7 +49,6 @@ public class TripController {
                 trip.getEndDate(),
                 trip.getJoinCode().value()
         );
-
     }
 
     @PostMapping("/join")
@@ -59,20 +56,15 @@ public class TripController {
             @AuthenticationPrincipal AuthenticatedParticipant participant,
             @Valid @RequestBody JoinTripRequest request
     ) {
-        Trip trip = joinTripUseCase.execute(request.joinCode(), participant.participantId());
+        Trip trip = joinTripUseCase.execute(request.joinCode(), participant.participantId(), request.budget());
         return tripMapperDto.toDto(trip);
     }
 
     @GetMapping
     public List<TripDto> getUserTrips(
             @AuthenticationPrincipal AuthenticatedParticipant participant
-    ){
+    ) {
         List<Trip> trips = listMyTripsUseCase.execute(participant.participantId());
-        return trips
-                .stream()
-                .map(tripMapperDto::toDto)
-                .toList();
+        return trips.stream().map(tripMapperDto::toDto).toList();
     }
-
-
 }

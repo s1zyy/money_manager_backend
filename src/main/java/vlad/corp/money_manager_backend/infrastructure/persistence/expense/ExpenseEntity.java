@@ -46,4 +46,7 @@ public class ExpenseEntity {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "is_prepaid", nullable = false)
+    private boolean isPrepaid;
 }

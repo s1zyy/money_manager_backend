@@ -2,6 +2,7 @@ package vlad.corp.money_manager_backend.presentation.mapper.trip_mapper;
 
 import org.springframework.stereotype.Component;
 import vlad.corp.money_manager_backend.application.trip.TripDashboard;
+import vlad.corp.money_manager_backend.presentation.dto.trip.MyStatsDto;
 import vlad.corp.money_manager_backend.presentation.dto.trip.ParticipantBalanceDto;
 import vlad.corp.money_manager_backend.presentation.dto.trip.TripDashboardDto;
 import vlad.corp.money_manager_backend.presentation.mapper.expense_mapper.ExpenseMapperDto;
@@ -17,9 +18,15 @@ public class TripDashboardMapper {
     }
 
     public TripDashboardDto toDto(TripDashboard dashboard) {
+        MyStatsDto myStats = new MyStatsDto(
+                dashboard.participantId(),
+                dashboard.myBudget().getAmount(),
+                dashboard.myDailyLimit().getAmount(),
+                dashboard.mySpentToday().getAmount()
+        );
         return new TripDashboardDto(
                 tripMapperDto.toDto(dashboard.trip()),
-                dashboard.dailyLimit().amount(),
+                myStats,
                 dashboard.balances().entrySet().stream()
                         .map(e -> new ParticipantBalanceDto(e.getKey(), e.getValue().getAmount()))
                         .toList(),
@@ -29,6 +36,5 @@ public class TripDashboardMapper {
                 dashboard.isOwner(),
                 dashboard.canLeave()
         );
-
     }
 }

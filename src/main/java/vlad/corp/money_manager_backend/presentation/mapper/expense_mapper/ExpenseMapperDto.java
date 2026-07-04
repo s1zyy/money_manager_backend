@@ -16,7 +16,8 @@ public class ExpenseMapperDto {
                 expense.getDate(),
                 expense.getDescription(),
                 expense.getSplitMode(),
-                expense.getParticipantShares()
+                expense.getParticipantShares(),
+                expense.isPrepaid()
         );
     }
 }

@@ -48,7 +48,8 @@ public class ExpenseController {
                 expenseDto.splitMode(),
                 expenseDto.participantIds(),
                 expenseDto.customShares(),
-                expenseDto.description());
+                expenseDto.description(),
+                expenseDto.isPrepaid());
         return true;
     }
 

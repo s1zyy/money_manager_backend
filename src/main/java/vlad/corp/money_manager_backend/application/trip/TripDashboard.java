@@ -10,10 +10,12 @@ import java.util.UUID;
 
 public record TripDashboard(
         Trip trip,
-        Money dailyLimit,
+        UUID participantId,
+        Money myBudget,
+        Money myDailyLimit,
+        Money mySpentToday,
         Map<UUID, Money> balances,
         List<Expense> expenses,
         boolean isOwner,
         boolean canLeave
-
 ) {}

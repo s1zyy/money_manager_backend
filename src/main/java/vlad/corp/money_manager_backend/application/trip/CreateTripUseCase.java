@@ -22,19 +22,15 @@ public class CreateTripUseCase {
     public Trip execute(
             UUID ownerId,
             String name,
-            BigDecimal totalBudget,
-            BigDecimal prepaidExpenses,
+            BigDecimal budget,
             LocalDate startDate,
             LocalDate endDate,
             String currency
     ) {
         JoinCode joinCode = joinCodeGenerator.generate();
-        Money totalBudgetMoney = new Money(totalBudget);
-        Money prepaidExpensesMoney = new Money(prepaidExpenses);
 
-
-        Set<UUID> participantIds = new HashSet<>();
-        participantIds.add(ownerId);
+        Map<UUID, Money> participantBudgets = new HashMap<>();
+        participantBudgets.put(ownerId, new Money(budget));
 
         TripStatus initialStatus = determineInitialStatus(startDate);
 
@@ -44,25 +40,21 @@ public class CreateTripUseCase {
                 name,
                 startDate,
                 endDate,
-                totalBudgetMoney,
-                prepaidExpensesMoney,
-                participantIds,
+                participantBudgets,
                 joinCode,
                 initialStatus,
                 currency
-
         );
         tripRepository.save(trip);
         return trip;
-
     }
 
     private TripStatus determineInitialStatus(LocalDate startDate) {
-        if(startDate == null) {
+        if (startDate == null) {
             return TripStatus.ACTIVE;
         }
         LocalDate now = LocalDate.now();
-        if(startDate.isAfter(now)) {
+        if (startDate.isAfter(now)) {
             return TripStatus.UPCOMING;
         }
         return TripStatus.ACTIVE;

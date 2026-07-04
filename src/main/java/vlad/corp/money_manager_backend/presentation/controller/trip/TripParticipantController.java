@@ -7,6 +7,8 @@ import vlad.corp.money_manager_backend.application.trip.AddVirtualParticipantUse
 import vlad.corp.money_manager_backend.application.trip.LeaveTripUseCase;
 import vlad.corp.money_manager_backend.application.trip.ListParticipantsUseCase;
 import vlad.corp.money_manager_backend.application.trip.RemoveParticipantUseCase;
+import vlad.corp.money_manager_backend.application.trip.UpdateAnyParticipantBudgetUseCase;
+import vlad.corp.money_manager_backend.presentation.dto.trip.UpdateBudgetRequest;
 import vlad.corp.money_manager_backend.domain.model.Participant;
 import vlad.corp.money_manager_backend.infrastructure.security.AuthenticatedParticipant;
 import vlad.corp.money_manager_backend.presentation.dto.participant.AddVirtualParticipantRequest;
@@ -24,13 +26,15 @@ public class TripParticipantController {
     private final RemoveParticipantUseCase removeParticipantUseCase;
     private final ParticipantMapperDto participantMapperDto;
     private final AddVirtualParticipantUseCase addVirtualParticipantUseCase;
+    private final UpdateAnyParticipantBudgetUseCase updateAnyParticipantBudgetUseCase;
 
-    public TripParticipantController(ListParticipantsUseCase listParticipantsUseCase, LeaveTripUseCase leaveTripUseCase, RemoveParticipantUseCase removeParticipantUseCase, ParticipantMapperDto participantMapperDto, AddVirtualParticipantUseCase addVirtualParticipantUseCase) {
+    public TripParticipantController(ListParticipantsUseCase listParticipantsUseCase, LeaveTripUseCase leaveTripUseCase, RemoveParticipantUseCase removeParticipantUseCase, ParticipantMapperDto participantMapperDto, AddVirtualParticipantUseCase addVirtualParticipantUseCase, UpdateAnyParticipantBudgetUseCase updateAnyParticipantBudgetUseCase) {
         this.listParticipantsUseCase = listParticipantsUseCase;
         this.leaveTripUseCase = leaveTripUseCase;
         this.removeParticipantUseCase = removeParticipantUseCase;
         this.participantMapperDto = participantMapperDto;
         this.addVirtualParticipantUseCase = addVirtualParticipantUseCase;
+        this.updateAnyParticipantBudgetUseCase = updateAnyParticipantBudgetUseCase;
     }
 
     @GetMapping("/{tripId}/participants")
@@ -64,13 +68,24 @@ public class TripParticipantController {
 
     }
 
+    @PutMapping("/{tripId}/participants/{participantId}/budget")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateParticipantBudget(
+            @AuthenticationPrincipal AuthenticatedParticipant owner,
+            @PathVariable UUID tripId,
+            @PathVariable UUID participantId,
+            @RequestBody UpdateBudgetRequest request
+    ) {
+        updateAnyParticipantBudgetUseCase.execute(tripId, owner.participantId(), participantId, request.budget());
+    }
+
     @PostMapping("/{tripId}/participants/virtual")
     public ParticipantDto addVirtualParticipant(
             @AuthenticationPrincipal AuthenticatedParticipant participant,
             @PathVariable UUID tripId,
             @RequestBody AddVirtualParticipantRequest request
     ) {
-        Participant virtual = addVirtualParticipantUseCase.execute(tripId, participant.participantId(), request.name());
+        Participant virtual = addVirtualParticipantUseCase.execute(tripId, participant.participantId(), request.name(), request.budget());
         return participantMapperDto.toDto(virtual);
     }
 }

@@ -74,6 +74,16 @@ public class TripUseCaseConfig {
     }
 
     @Bean
+    public UpdateParticipantBudgetUseCase updateParticipantBudgetUseCase(TripRepository tripRepository) {
+        return new UpdateParticipantBudgetUseCase(tripRepository);
+    }
+
+    @Bean
+    public UpdateAnyParticipantBudgetUseCase updateAnyParticipantBudgetUseCase(TripRepository tripRepository) {
+        return new UpdateAnyParticipantBudgetUseCase(tripRepository);
+    }
+
+    @Bean
     public ListMyTripsUseCase listMyTripsUseCase(TripRepository tripRepository) {
         return new ListMyTripsUseCase(tripRepository);
     }

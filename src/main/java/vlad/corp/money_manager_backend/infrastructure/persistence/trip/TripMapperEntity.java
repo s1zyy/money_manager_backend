@@ -7,14 +7,17 @@ import vlad.corp.money_manager_backend.domain.model.TripStatus;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
 import vlad.corp.money_manager_backend.infrastructure.persistence.trip.status.TripStatusEntity;
 
-import java.util.HashSet;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class TripMapperEntity {
 
-
-
     public TripEntity toEntity(Trip trip) {
+        Map<UUID, BigDecimal> budgets = new HashMap<>();
+        trip.getParticipantBudgets().forEach((id, money) -> budgets.put(id, money.getAmount()));
 
         Long statusId = mapStatusToId(trip.getStatus());
         return new TripEntity(
@@ -23,24 +26,24 @@ public class TripMapperEntity {
                 trip.getName(),
                 trip.getStartDate(),
                 trip.getEndDate(),
-                trip.getTotalBudget().getAmount(),
-                trip.getPrepaidExpenses().getAmount(),
                 trip.getCurrency(),
-                new HashSet<>(trip.getParticipantIds()),
+                budgets,
                 trip.getJoinCode().value(),
                 new TripStatusEntity(statusId, trip.getStatus())
         );
     }
+
     public Trip toDomain(TripEntity tripEntity) {
+        Map<UUID, Money> budgets = new HashMap<>();
+        tripEntity.getParticipantBudgets().forEach((id, amount) -> budgets.put(id, new Money(amount)));
+
         return new Trip(
                 tripEntity.getId(),
                 tripEntity.getOwnerId(),
                 tripEntity.getName(),
                 tripEntity.getStartDate(),
                 tripEntity.getEndDate(),
-                new Money(tripEntity.getTotalBudget()),
-                new Money(tripEntity.getPrepaidExpenses()),
-                new HashSet<>(tripEntity.getParticipantIds()),
+                budgets,
                 new JoinCode(tripEntity.getJoinCode()),
                 tripEntity.getTripStatus().getCode(),
                 tripEntity.getCurrency()
@@ -48,11 +51,10 @@ public class TripMapperEntity {
     }
 
     private Long mapStatusToId(TripStatus status) {
-        return switch(status) {
+        return switch (status) {
             case UPCOMING -> 1L;
             case ACTIVE -> 2L;
             case ARCHIVED -> 3L;
         };
-
     }
 }

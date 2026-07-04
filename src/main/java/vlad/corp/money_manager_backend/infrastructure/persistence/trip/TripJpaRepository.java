@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface TripJpaRepository extends JpaRepository<TripEntity, UUID> {
     Optional<TripEntity> findByJoinCode(String joinCode);
-    @Query("SELECT t FROM TripEntity t JOIN t.participantIds p WHERE p = :userId")
+    @Query("SELECT t FROM TripEntity t JOIN t.participantBudgets p WHERE KEY(p) = :userId")
     List<TripEntity> findAllTripsForUser(@Param("userId") UUID userId);
 
     @Query("SELECT t FROM TripEntity t WHERE t.tripStatus.id = 1 AND t.startDate <= :today")

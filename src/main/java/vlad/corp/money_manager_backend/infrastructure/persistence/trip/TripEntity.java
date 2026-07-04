@@ -6,7 +6,7 @@ import vlad.corp.money_manager_backend.infrastructure.persistence.trip.status.Tr
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -33,25 +33,16 @@ public class TripEntity {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @Column(name = "total_budget")
-    private BigDecimal totalBudget;
-
-    @Column(name = "prepaid_expenses")
-    private BigDecimal prepaidExpenses;
-
     @Column(name = "currency", length = 3, nullable = false)
     private String currency;
-
-
-
-
 
     @ElementCollection
     @CollectionTable(
             name = "trip_participants",
             joinColumns = @JoinColumn(name = "trip_id"))
-    @Column(name = "participant_id", nullable = false)
-    private Set<UUID> participantIds;
+    @MapKeyColumn(name = "participant_id")
+    @Column(name = "budget", nullable = false)
+    private Map<UUID, BigDecimal> participantBudgets;
 
     @Column(name = "join_code", nullable = false, unique = true, length = 8)
     private String joinCode;
@@ -59,6 +50,4 @@ public class TripEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", nullable = false)
     private TripStatusEntity tripStatus;
-
-
 }

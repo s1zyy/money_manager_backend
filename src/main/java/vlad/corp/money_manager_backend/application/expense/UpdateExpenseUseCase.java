@@ -68,7 +68,8 @@ public class UpdateExpenseUseCase {
                 effectiveSplitMode,
                 shares,
                 newExpenseDate != null ? newExpenseDate : expense.getDate(),
-                newDescription != null ? newDescription : expense.getDescription()
+                newDescription != null ? newDescription : expense.getDescription(),
+                expense.isPrepaid()
         );
         expenseRepository.save(updatedExpense);
         return updatedExpense;

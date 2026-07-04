@@ -37,7 +37,8 @@ public class AddExpenseUseCase {
                            SplitMode splitMode,
                            Set<UUID> participantIds,
                            Map<UUID, BigDecimal> customShares,
-                           String description) {
+                           String description,
+                           boolean isPrepaid) {
 
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new NotFoundException("Trip not found"));
@@ -61,7 +62,8 @@ public class AddExpenseUseCase {
                 splitMode,
                 shares,
                 date,
-                description
+                description,
+                isPrepaid
         );
         expenseRepository.save(expense);
         return expense;

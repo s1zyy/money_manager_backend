@@ -19,7 +19,8 @@ public class ExpenseMapper {
                 SplitMode.valueOf(entity.getSplitMode()),
                 new HashMap<>(entity.getParticipantShares()),
                 entity.getDate(),
-                entity.getDescription()
+                entity.getDescription(),
+                entity.isPrepaid()
         );
     }
 
@@ -32,7 +33,8 @@ public class ExpenseMapper {
                 domain.getSplitMode().name(),
                 new HashMap<>(domain.getParticipantShares()),
                 domain.getDate(),
-                domain.getDescription()
+                domain.getDescription(),
+                domain.isPrepaid()
         );
     }
 }

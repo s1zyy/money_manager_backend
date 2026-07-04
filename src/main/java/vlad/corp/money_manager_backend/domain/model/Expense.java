@@ -20,10 +20,12 @@ public class Expense {
     private final Map<UUID, BigDecimal> participantShares; // value null = legacy EQUAL row
     private final LocalDate date;
     private final String description;
+    private final boolean isPrepaid;
 
     public Expense(UUID id, UUID tripId, Money amount, UUID payerId, SplitMode splitMode,
-                   Map<UUID, BigDecimal> participantShares, LocalDate date, String description) {
-        if (date.isAfter(LocalDate.now())) {
+                   Map<UUID, BigDecimal> participantShares, LocalDate date, String description,
+                   boolean isPrepaid) {
+        if (!isPrepaid && date != null && date.isAfter(LocalDate.now())) {
             throw new InvalidExpenseDateException("Expense date is after now");
         }
         this.id = id;
@@ -34,6 +36,7 @@ public class Expense {
         this.participantShares = participantShares;
         this.date = date;
         this.description = description;
+        this.isPrepaid = isPrepaid;
     }
 
     public Set<UUID> getParticipantIds() {

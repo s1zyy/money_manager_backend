@@ -13,9 +13,10 @@ import java.util.UUID;
 public record CreateExpenseDto(
         @NotNull @Positive BigDecimal amount,
         UUID payerId,
-        @NotNull LocalDate date,
+        LocalDate date,
         @NotNull SplitMode splitMode,
         Set<UUID> participantIds,
         Map<UUID, BigDecimal> customShares,
-        String description
+        String description,
+        boolean isPrepaid
 ) {}

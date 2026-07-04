@@ -17,6 +17,7 @@ public record ExpenseDto(
         LocalDate date,
         String description,
         SplitMode splitMode,
-        Map<UUID, BigDecimal> participantShares
+        Map<UUID, BigDecimal> participantShares,
+        boolean isPrepaid
 ) {
 }
