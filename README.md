@@ -3,18 +3,18 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
-  <img src="https://img.shields.io/badge/PostgreSQL-15-316192?style=for-the-badge&logo=postgresql&logoColor=white"/>
-  <img src="https://img.shields.io/badge/JWT-Auth-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
-  <img src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 21"/>
+  <img src="https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?style=for-the-badge&logo=spring&logoColor=white" alt="Spring Boot 4.0"/>
+  <img src="https://img.shields.io/badge/PostgreSQL-15-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL 15"/>
+  <img src="https://img.shields.io/badge/JWT-Auth-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT Auth"/>
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose"/>
+  <img src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" alt="License MIT"/>
 </p>
 
 <p align="center">
   <b><a href="https://github.com/s1zyy/money_manager">📱 Mobile App (Flutter)</a></b> •
-  <b><a href="#-api-reference">API Reference</a></b> •
-  <b><a href="#-quick-start">Quick Start</a></b>
+  <b><a href="#api-reference">API Reference</a></b> •
+  <b><a href="#quick-start">Quick Start</a></b>
 </p>
 
 ---
@@ -32,11 +32,11 @@ Built with Clean Architecture — domain logic is fully decoupled from framework
 | | Feature |
 |---|---|
 | 🔐 | JWT-based authentication (register / login) |
-| ✈️ | Full trip lifecycle — create, update, archive, delete |
-| 👥 | Join trips via unique invite codes |
-| 💰 | Expense tracking with flexible participant splits |
-| 📊 | Automatic balance calculation per participant |
-| 📉 | Daily limit & budget tracking |
+| ✈️ | Full trip lifecycle — create, update, archive, unarchive, delete |
+| 👥 | Join trips via unique invite codes; virtual participants for non-app members |
+| 💰 | Expense tracking with equal or custom splits per participant |
+| 📊 | Automatic balance calculation & settlement suggestions |
+| 📉 | Per-participant budget & daily limit tracking |
 | 🗄️ | Schema versioning with Flyway migrations |
 | 🐳 | One-command PostgreSQL setup via Docker Compose |
 
@@ -141,12 +141,24 @@ All endpoints are under `/api`. JWT token required in `Authorization: Bearer <to
 | `POST` | `/api/trips` | Create a trip |
 | `GET` | `/api/trips` | List user's trips |
 | `GET` | `/api/trips/{id}` | Get trip details |
-| `PUT` | `/api/trips/{id}` | Update trip |
-| `DELETE` | `/api/trips/{id}` | Delete trip |
+| `PUT` | `/api/trips/{id}` | Update trip name / dates / currency |
+| `DELETE` | `/api/trips/{id}` | Delete trip (owner only) |
 | `POST` | `/api/trips/{id}/archive` | Archive trip (owner only) |
-| `POST` | `/api/trips/{id}/join` | Join trip by invite code |
-| `POST` | `/api/trips/{id}/leave` | Leave trip |
-| `GET` | `/api/trips/{id}/dashboard` | Get balances & spending stats |
+| `POST` | `/api/trips/{id}/unarchive` | Unarchive trip (owner only) |
+| `POST` | `/api/trips/join` | Join trip by invite code |
+| `GET` | `/api/trips/{id}/dashboard` | Get balances, spending stats & expenses |
+| `GET` | `/api/trips/{id}/settlement` | Get settlement transfers (who pays whom) |
+
+### Participants
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/trips/{tripId}/participants` | List trip participants |
+| `POST` | `/api/trips/{tripId}/leave` | Leave trip |
+| `DELETE` | `/api/trips/{tripId}/participants/{pid}` | Remove participant (owner only) |
+| `POST` | `/api/trips/{tripId}/participants/virtual` | Add virtual participant (owner only) |
+| `PUT` | `/api/trips/{id}/my-budget` | Update your own budget |
+| `PUT` | `/api/trips/{id}/participants/{pid}/budget` | Update any participant's budget (owner only) |
 
 ### Expenses
 
@@ -158,12 +170,6 @@ All endpoints are under `/api`. JWT token required in `Authorization: Bearer <to
 | `PUT` | `/api/trips/{tripId}/expenses/{id}` | Update expense |
 | `DELETE` | `/api/trips/{tripId}/expenses/{id}` | Delete expense |
 
-### Participants
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/trips/{tripId}/participants` | List trip participants |
-
 ### Example Requests
 
 <details>
@@ -173,7 +179,7 @@ All endpoints are under `/api`. JWT token required in `Authorization: Bearer <to
 # Register
 curl -X POST http://localhost:8080/api/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"email": "john@example.com", "password": "secret123"}'
+  -d '{"email": "john@example.com", "password": "secret123", "name": "John"}'
 
 # Login
 curl -X POST http://localhost:8080/api/auth/login \
@@ -196,12 +202,13 @@ curl -X POST http://localhost:8080/api/trips \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Barcelona 2025",
+    "budget": 3000,
     "startDate": "2025-07-01",
     "endDate": "2025-07-10",
-    "totalBudget": 3000
+    "currency": "EUR"
   }'
 
-# Add expense
+# Add expense (equal split)
 curl -X POST http://localhost:8080/api/trips/{tripId}/expenses \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
@@ -209,6 +216,8 @@ curl -X POST http://localhost:8080/api/trips/{tripId}/expenses \
     "amount": 84.50,
     "description": "Tapas dinner",
     "date": "2025-07-03",
+    "splitMode": "EQUAL",
+    "payerId": "uuid-of-payer",
     "participantIds": ["uuid-1", "uuid-2"]
   }'
 ```
@@ -219,11 +228,60 @@ curl -X POST http://localhost:8080/api/trips/{tripId}/expenses \
 <summary>Join a trip by invite code</summary>
 
 ```bash
-curl -X POST http://localhost:8080/api/trips/{tripId}/join \
+curl -X POST http://localhost:8080/api/trips/join \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"code": "ABC123"}'
+  -d '{"joinCode": "ABC12345", "budget": 1500}'
 ```
+
+</details>
+
+<details>
+<summary>Dashboard response shape</summary>
+
+`GET /api/trips/{id}/dashboard` returns:
+
+```json
+{
+  "trip": {
+    "id": "uuid",
+    "name": "Barcelona 2025",
+    "startDate": "2025-07-01",
+    "endDate": "2025-07-10",
+    "currency": "EUR",
+    "status": "ACTIVE",
+    "joinCode": "ABC12345",
+    "participantBudgets": { "uuid-1": 3000, "uuid-2": 1500 }
+  },
+  "myStats": {
+    "participantId": "uuid-1",
+    "budget": 3000,
+    "dailyLimit": 142.50,
+    "spentToday": 42.25
+  },
+  "participants": [
+    { "participantId": "uuid-1", "balance": 84.50 },
+    { "participantId": "uuid-2", "balance": -84.50 }
+  ],
+  "expenseDtoList": [
+    {
+      "id": "uuid",
+      "tripId": "uuid",
+      "amount": 84.50,
+      "payerId": "uuid-1",
+      "splitMode": "EQUAL",
+      "participantShares": { "uuid-1": null, "uuid-2": null },
+      "date": "2025-07-03",
+      "description": "Tapas dinner",
+      "isPrepaid": false
+    }
+  ],
+  "isOwner": true,
+  "canLeave": false
+}
+```
+
+`participantShares` value is `null` for `EQUAL` split (divide evenly) and an explicit amount for `CUSTOM` split.
 
 </details>
 
@@ -234,16 +292,25 @@ curl -X POST http://localhost:8080/api/trips/{tripId}/join \
 ```
 participants ──(1:M)──► trips (as owner)
      │
-     └──(M:M via trip_participants)──► trips (as member)
+     └──(M:M via trip_participants)──► trips (as member, with per-participant budget)
                                             │
                                             └──(1:M)──► expenses
                                                             │
-                                                            └──(M:M via expense_participants)
+                                                            ├──(M:M via expense_participants — equal split)
+                                                            └──(1:M via expense_custom_shares — custom split)
 ```
 
-Tables: `participants`, `trips`, `trip_participants`, `expenses`, `expense_participants`, `trip_statuses`
+| Table | Description |
+|-------|-------------|
+| `participants` | Users and virtual participants (`is_virtual`, nullable email) |
+| `trips` | Trip metadata, owner, dates, currency, join code |
+| `trip_participants` | M:M join table with per-participant `budget` |
+| `trip_statuses` | Enum-like lookup: UPCOMING / ACTIVE / ARCHIVED |
+| `expenses` | Expense records with `split_mode` (EQUAL / CUSTOM) and `is_prepaid` flag |
+| `expense_participants` | Participants included in an expense (EQUAL split — amount is null) |
+| `expense_custom_shares` | Explicit share amounts per participant (CUSTOM split only) |
 
-Full schema: [`db/migration/V1_innit_tables_create.sql`](src/main/resources/db/migration/V1_innit_tables_create.sql)
+Migrations: [`db/migration/`](src/main/resources/db/migration/) — V1 initial schema through V7 prepaid expenses flag.
 
 ---
 
@@ -269,4 +336,4 @@ Full schema: [`db/migration/V1_innit_tables_create.sql`](src/main/resources/db/m
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+Custom license — see [LICENSE](LICENSE)
