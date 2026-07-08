@@ -8,6 +8,7 @@ import vlad.corp.money_manager_backend.application.auth.LoginUseCase;
 import vlad.corp.money_manager_backend.application.auth.RegisterUseCase;
 import vlad.corp.money_manager_backend.application.auth.port.TokenGenerator;
 import vlad.corp.money_manager_backend.domain.repository.ParticipantRepository;
+import vlad.corp.money_manager_backend.domain.repository.VirtualParticipantInviteRepository;
 
 @Configuration
 public class AuthUseCaseConfig {
@@ -20,8 +21,9 @@ public class AuthUseCaseConfig {
     @Bean
     public RegisterUseCase registerUseCase(ParticipantRepository participantRepository,
                                            PasswordEncoder encoder,
-                                           TokenGenerator tokenGenerator) {
-        return new RegisterUseCase(participantRepository, encoder, tokenGenerator);
+                                           TokenGenerator tokenGenerator,
+                                           VirtualParticipantInviteRepository inviteRepository) {
+        return new RegisterUseCase(participantRepository, encoder, tokenGenerator, inviteRepository);
     }
 
     @Bean

@@ -1,13 +1,16 @@
 package vlad.corp.money_manager_backend.presentation.controller.trip;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import vlad.corp.money_manager_backend.application.invite.InviteVirtualParticipantUseCase;
 import vlad.corp.money_manager_backend.application.trip.AddVirtualParticipantUseCase;
 import vlad.corp.money_manager_backend.application.trip.LeaveTripUseCase;
 import vlad.corp.money_manager_backend.application.trip.ListParticipantsUseCase;
 import vlad.corp.money_manager_backend.application.trip.RemoveParticipantUseCase;
 import vlad.corp.money_manager_backend.application.trip.UpdateAnyParticipantBudgetUseCase;
+import vlad.corp.money_manager_backend.presentation.dto.invite.InviteRequest;
 import vlad.corp.money_manager_backend.presentation.dto.trip.UpdateBudgetRequest;
 import vlad.corp.money_manager_backend.domain.model.Participant;
 import vlad.corp.money_manager_backend.infrastructure.security.AuthenticatedParticipant;
@@ -27,14 +30,22 @@ public class TripParticipantController {
     private final ParticipantMapperDto participantMapperDto;
     private final AddVirtualParticipantUseCase addVirtualParticipantUseCase;
     private final UpdateAnyParticipantBudgetUseCase updateAnyParticipantBudgetUseCase;
+    private final InviteVirtualParticipantUseCase inviteVirtualParticipantUseCase;
 
-    public TripParticipantController(ListParticipantsUseCase listParticipantsUseCase, LeaveTripUseCase leaveTripUseCase, RemoveParticipantUseCase removeParticipantUseCase, ParticipantMapperDto participantMapperDto, AddVirtualParticipantUseCase addVirtualParticipantUseCase, UpdateAnyParticipantBudgetUseCase updateAnyParticipantBudgetUseCase) {
+    public TripParticipantController(ListParticipantsUseCase listParticipantsUseCase,
+                                     LeaveTripUseCase leaveTripUseCase,
+                                     RemoveParticipantUseCase removeParticipantUseCase,
+                                     ParticipantMapperDto participantMapperDto,
+                                     AddVirtualParticipantUseCase addVirtualParticipantUseCase,
+                                     UpdateAnyParticipantBudgetUseCase updateAnyParticipantBudgetUseCase,
+                                     InviteVirtualParticipantUseCase inviteVirtualParticipantUseCase) {
         this.listParticipantsUseCase = listParticipantsUseCase;
         this.leaveTripUseCase = leaveTripUseCase;
         this.removeParticipantUseCase = removeParticipantUseCase;
         this.participantMapperDto = participantMapperDto;
         this.addVirtualParticipantUseCase = addVirtualParticipantUseCase;
         this.updateAnyParticipantBudgetUseCase = updateAnyParticipantBudgetUseCase;
+        this.inviteVirtualParticipantUseCase = inviteVirtualParticipantUseCase;
     }
 
     @GetMapping("/{tripId}/participants")
@@ -65,7 +76,6 @@ public class TripParticipantController {
             @PathVariable(name = "participantId") UUID toRemove
     ) {
         removeParticipantUseCase.execute(tripId, participant.participantId(), toRemove);
-
     }
 
     @PutMapping("/{tripId}/participants/{participantId}/budget")
@@ -87,5 +97,16 @@ public class TripParticipantController {
     ) {
         Participant virtual = addVirtualParticipantUseCase.execute(tripId, participant.participantId(), request.name(), request.budget());
         return participantMapperDto.toDto(virtual);
+    }
+
+    @PostMapping("/{tripId}/participants/{participantId}/invite")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inviteVirtualParticipant(
+            @AuthenticationPrincipal AuthenticatedParticipant owner,
+            @PathVariable UUID tripId,
+            @PathVariable UUID participantId,
+            @Valid @RequestBody InviteRequest request
+    ) {
+        inviteVirtualParticipantUseCase.execute(tripId, owner.participantId(), participantId, request.email());
     }
 }
