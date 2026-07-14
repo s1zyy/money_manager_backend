@@ -39,6 +39,15 @@ public class ValidateInviteTokenUseCase {
         Participant participant = participantRepository.findById(invite.virtualParticipantId())
                 .orElseThrow(() -> new NotFoundException("Participant not found"));
 
-        return new InviteTokenInfo(trip.getName(), participant.getName(), invite.invitedEmail());
+        boolean requiresLogin = participantRepository.findByEmail(invite.invitedEmail())
+                .map(real -> {
+                    if (trip.getParticipantBudgets().containsKey(real.getId())) {
+                        throw new BusinessException("You are already a participant in this trip");
+                    }
+                    return true;
+                })
+                .orElse(false);
+
+        return new InviteTokenInfo(trip.getName(), participant.getName(), invite.invitedEmail(), requiresLogin);
     }
 }

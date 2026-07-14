@@ -51,4 +51,11 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     public void deleteAllByTripId(UUID tripId) {
         jpaRepository.deleteAllByTripId(tripId);
     }
+
+    @Override
+    @Transactional
+    public void reassignParticipant(UUID tripId, UUID fromParticipantId, UUID toParticipantId) {
+        jpaRepository.reassignPayer(tripId, fromParticipantId, toParticipantId);
+        jpaRepository.reassignParticipantShares(tripId, fromParticipantId, toParticipantId);
+    }
 }

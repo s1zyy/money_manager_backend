@@ -46,6 +46,13 @@ public class InviteVirtualParticipantUseCase {
         trip.ensureNotArchived();
         trip.ensureOwner(ownerId);
 
+        participantRepository.findByEmail(email).ifPresent(existing -> {
+            if (trip.getParticipantBudgets().containsKey(existing.getId())) {
+                throw new BusinessException("This user is already in the trip");
+            }
+            throw new BusinessException("Email already registered. Share the trip join code instead");
+        });
+
         Participant virtual = participantRepository.findById(virtualParticipantId)
                 .orElseThrow(() -> new NotFoundException("Participant not found"));
 

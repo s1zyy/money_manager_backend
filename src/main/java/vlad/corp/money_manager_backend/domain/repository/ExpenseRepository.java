@@ -14,4 +14,5 @@ public interface ExpenseRepository {
     List<Expense> findAllByTripId(UUID id);
     Set<UUID> findActiveParticipantIds(UUID tripId);
     void deleteAllByTripId(UUID tripId);
+    void reassignParticipant(UUID tripId, UUID fromParticipantId, UUID toParticipantId);
 }
