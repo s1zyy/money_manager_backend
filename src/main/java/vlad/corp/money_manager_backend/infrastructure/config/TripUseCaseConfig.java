@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import vlad.corp.money_manager_backend.application.calculator.CalculateBalancesUseCase;
 import vlad.corp.money_manager_backend.application.calculator.CalculateDailyLimitUseCase;
 import vlad.corp.money_manager_backend.application.calculator.CalculateSettlementUseCase;
+import vlad.corp.money_manager_backend.application.participant.UpdateAnyParticipantBudgetUseCase;
+import vlad.corp.money_manager_backend.application.participant.UpdateParticipantBudgetUseCase;
 import vlad.corp.money_manager_backend.application.port.JoinCodeGenerator;
 import vlad.corp.money_manager_backend.application.trip.*;
 import vlad.corp.money_manager_backend.domain.policy.TripAccessPolicy;

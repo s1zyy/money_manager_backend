@@ -21,9 +21,9 @@ public class LoginUseCase {
 
     public String login(String email, String password) {
         Participant participant = participantRepository.findByEmail(email)
-                .orElseThrow(InvalidCredentialsException::new);
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
         if(!passwordEncoder.matches(password, participant.getPasswordHash())) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Invalid email or password");
         }
         return tokenGenerator.generateToken(participant, List.of("ROLE_USER"));
     }

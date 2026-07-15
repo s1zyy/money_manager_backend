@@ -1,25 +1,26 @@
-package vlad.corp.money_manager_backend.application.trip;
+package vlad.corp.money_manager_backend.application.participant;
 
 import vlad.corp.money_manager_backend.application.exception.NotFoundException;
 import vlad.corp.money_manager_backend.domain.model.Trip;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class UpdateParticipantBudgetUseCase {
+public class UpdateAnyParticipantBudgetUseCase {
 
     private final TripRepository tripRepository;
 
-    public UpdateParticipantBudgetUseCase(TripRepository tripRepository) {
+    public UpdateAnyParticipantBudgetUseCase(TripRepository tripRepository) {
         this.tripRepository = tripRepository;
     }
 
-    public Trip execute(UUID tripId, UUID participantId, BigDecimal budget) {
+    public void execute(UUID tripId, UUID ownerId, UUID targetParticipantId, BigDecimal budget) {
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new NotFoundException("Trip not found with id: " + tripId));
-        trip.updateParticipantBudget(participantId, new Money(budget));
+                .orElseThrow(() -> new NotFoundException("Trip not found"));
+        trip.ensureOwner(ownerId);
+        trip.updateParticipantBudget(targetParticipantId, new Money(budget));
         tripRepository.save(trip);
-        return trip;
     }
 }

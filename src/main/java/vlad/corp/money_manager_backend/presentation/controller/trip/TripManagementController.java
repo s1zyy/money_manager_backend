@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import vlad.corp.money_manager_backend.application.participant.UpdateParticipantBudgetUseCase;
 import vlad.corp.money_manager_backend.application.trip.*;
 import vlad.corp.money_manager_backend.domain.model.Trip;
 import vlad.corp.money_manager_backend.infrastructure.security.AuthenticatedParticipant;

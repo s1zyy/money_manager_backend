@@ -9,7 +9,7 @@ import vlad.corp.money_manager_backend.application.trip.AddVirtualParticipantUse
 import vlad.corp.money_manager_backend.application.trip.LeaveTripUseCase;
 import vlad.corp.money_manager_backend.application.trip.ListParticipantsUseCase;
 import vlad.corp.money_manager_backend.application.trip.RemoveParticipantUseCase;
-import vlad.corp.money_manager_backend.application.trip.UpdateAnyParticipantBudgetUseCase;
+import vlad.corp.money_manager_backend.application.participant.UpdateAnyParticipantBudgetUseCase;
 import vlad.corp.money_manager_backend.presentation.dto.invite.InviteRequest;
 import vlad.corp.money_manager_backend.presentation.dto.trip.UpdateBudgetRequest;
 import vlad.corp.money_manager_backend.domain.model.Participant;
