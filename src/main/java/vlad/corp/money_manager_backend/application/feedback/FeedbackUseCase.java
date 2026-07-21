@@ -17,7 +17,7 @@ public class FeedbackUseCase {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setFrom(fromEmail);
         mail.setTo(fromEmail);
-        mail.setSubject("[Budgi " + type + "] from " + senderEmail);
+        mail.setSubject("[TripPace " + type + "] from " + senderEmail);
         mail.setText(
                 "Type: " + type + "\n" +
                 "From: " + senderEmail + "\n\n" +

@@ -102,7 +102,7 @@ public class InviteVirtualParticipantUseCase {
         message.setSubject("You were invited on a trip «" + tripName + "»");
         message.setText(
                 "Hi, " + participantName + "!\n\n" +
-                "You have been invited to join the trip «" + tripName + "» in Budgi app.\n\n" +
+                "You have been invited to join the trip «" + tripName + "» in TripPace app.\n\n" +
                 "Download the app and enter this code when registering:\n\n" +
                 "  " + token + "\n\n" +
                 "The code is valid for 7 days.\n\n" +
