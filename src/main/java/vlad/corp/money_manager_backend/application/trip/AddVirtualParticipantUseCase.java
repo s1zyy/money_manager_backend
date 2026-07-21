@@ -23,7 +23,7 @@ public class AddVirtualParticipantUseCase {
 
     public Participant execute(UUID tripId, UUID ownerId, String name, BigDecimal budget) {
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new vlad.corp.money_manager_backend.application.exception.NotFoundException("Trip not found"));
+                .orElseThrow(() -> new vlad.corp.money_manager_backend.application.exceptions.NotFoundException("Trip not found"));
 
         trip.ensureNotArchived();
         trip.ensureOwner(ownerId);

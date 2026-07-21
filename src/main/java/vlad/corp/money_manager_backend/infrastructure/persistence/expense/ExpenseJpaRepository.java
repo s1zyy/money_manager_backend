@@ -14,6 +14,9 @@ public interface ExpenseJpaRepository extends JpaRepository<ExpenseEntity, UUID>
     Set<UUID> findDistinctParticipantsInExpenses(@Param("tripId") UUID tripId);
     @Query("SELECT DISTINCT e.payerId FROM ExpenseEntity e WHERE e.tripId = :tripId")
     Set<UUID> findDistinctPayersInExpenses(@Param("tripId") UUID tripId);
+    @Query(value = "SELECT (EXISTS(SELECT 1 FROM expenses WHERE payer_id = :id) OR EXISTS(SELECT 1 FROM expense_participants WHERE participant_id = :id))", nativeQuery = true)
+    boolean existsAnyExpenseInvolvement(@Param("id") UUID participantId);
+
     @Modifying
     @Query(value = "DELETE FROM expenses WHERE trip_id = :tripId", nativeQuery = true)
     void deleteAllByTripId(@Param("tripId") UUID tripId);

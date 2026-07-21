@@ -12,5 +12,6 @@ public interface ParticipantRepository {
     Optional<Participant> findById(UUID id);
     Set<Participant>  findAllByIds(Set<UUID> ids);
     void deleteById(UUID id);
+    void softDelete(UUID id);
 
 }

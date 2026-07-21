@@ -35,13 +35,13 @@ public class AuthController {
     public LoginResponse register(@Valid @RequestBody AuthRequest authRequest) {
         String token = registerUseCase.register(
                 authRequest.email(), authRequest.password(), authRequest.name(), authRequest.inviteToken());
-        return new LoginResponse(token);
+        return new LoginResponse(token, authRequest.name(), authRequest.email());
     }
 
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
-        String token = loginUseCase.login(loginRequest.email(), loginRequest.password());
-        return new LoginResponse(token);
+        var result = loginUseCase.login(loginRequest.email(), loginRequest.password());
+        return new LoginResponse(result.token(), result.name(), result.email());
     }
 
     @GetMapping("/validate-invite")
@@ -53,6 +53,6 @@ public class AuthController {
     @PostMapping("/claim-invite-login")
     public LoginResponse claimInviteWithLogin(@Valid @RequestBody ClaimInviteWithLoginRequest request) {
         String token = claimInviteWithLoginUseCase.execute(request.token(), request.password());
-        return new LoginResponse(token);
+        return new LoginResponse(token, "", "");
     }
 }

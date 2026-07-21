@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import vlad.corp.money_manager_backend.application.participant.ChangePasswordUseCase;
+import vlad.corp.money_manager_backend.application.participant.DeleteAccountUseCase;
+import vlad.corp.money_manager_backend.application.participant.FullDeleteAccountUseCase;
 import vlad.corp.money_manager_backend.application.participant.UpdateProfileUseCase;
-import vlad.corp.money_manager_backend.application.exception.NotFoundException;
+import vlad.corp.money_manager_backend.application.exceptions.NotFoundException;
 import vlad.corp.money_manager_backend.domain.model.Participant;
 import vlad.corp.money_manager_backend.domain.repository.ParticipantRepository;
 import vlad.corp.money_manager_backend.infrastructure.security.AuthenticatedParticipant;
@@ -20,13 +22,19 @@ public class ParticipantController {
     private final ParticipantRepository participantRepository;
     private final UpdateProfileUseCase updateProfileUseCase;
     private final ChangePasswordUseCase changePasswordUseCase;
+    private final DeleteAccountUseCase deleteAccountUseCase;
+    private final FullDeleteAccountUseCase fullDeleteAccountUseCase;
 
     public ParticipantController(ParticipantRepository participantRepository,
                                  UpdateProfileUseCase updateProfileUseCase,
-                                 ChangePasswordUseCase changePasswordUseCase) {
+                                 ChangePasswordUseCase changePasswordUseCase,
+                                 DeleteAccountUseCase deleteAccountUseCase,
+                                 FullDeleteAccountUseCase fullDeleteAccountUseCase) {
         this.participantRepository = participantRepository;
         this.updateProfileUseCase = updateProfileUseCase;
         this.changePasswordUseCase = changePasswordUseCase;
+        this.deleteAccountUseCase = deleteAccountUseCase;
+        this.fullDeleteAccountUseCase = fullDeleteAccountUseCase;
     }
 
     @GetMapping("/me")
@@ -49,5 +57,15 @@ public class ParticipantController {
             @AuthenticationPrincipal AuthenticatedParticipant auth,
             @Valid @RequestBody ChangePasswordRequest request) {
         changePasswordUseCase.execute(auth.participantId(), request.currentPassword(), request.newPassword());
+    }
+
+    @DeleteMapping("/me")
+    public void deleteAccount(@AuthenticationPrincipal AuthenticatedParticipant auth) {
+        deleteAccountUseCase.execute(auth.participantId());
+    }
+
+    @DeleteMapping("/me/full")
+    public void fullDeleteAccount(@AuthenticationPrincipal AuthenticatedParticipant auth) {
+        fullDeleteAccountUseCase.execute(auth.participantId());
     }
 }

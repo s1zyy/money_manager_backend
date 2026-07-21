@@ -9,6 +9,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import vlad.corp.money_manager_backend.infrastructure.security.filters.AppVersionFilter;
+import vlad.corp.money_manager_backend.infrastructure.security.filters.JwtAuthenticationFilter;
 
 import java.util.List;
 
@@ -18,9 +20,12 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
+    private final AppVersionFilter appVersionFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+                          AppVersionFilter appVersionFilter) {
         this.jwtFilter = jwtAuthenticationFilter;
+        this.appVersionFilter = appVersionFilter;
     }
 
     @Bean
@@ -31,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .addFilterBefore(appVersionFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

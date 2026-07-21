@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -31,4 +32,7 @@ public class ParticipantEntity {
 
     @Column(name = "is_virtual", nullable = false)
     private boolean isVirtual;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }

@@ -58,4 +58,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
         jpaRepository.reassignPayer(tripId, fromParticipantId, toParticipantId);
         jpaRepository.reassignParticipantShares(tripId, fromParticipantId, toParticipantId);
     }
+
+    @Override
+    public boolean hasAnyExpenseInvolvement(UUID participantId) {
+        return jpaRepository.existsAnyExpenseInvolvement(participantId);
+    }
 }

@@ -12,7 +12,8 @@ public class ParticipantMapper {
                 participant.getName(),
                 participant.getEmail(),
                 participant.getPasswordHash(),
-                participant.isVirtual()
+                participant.isVirtual(),
+                null
         );
     }
 

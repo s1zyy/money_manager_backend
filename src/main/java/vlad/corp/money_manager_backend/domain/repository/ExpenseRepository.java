@@ -15,4 +15,5 @@ public interface ExpenseRepository {
     Set<UUID> findActiveParticipantIds(UUID tripId);
     void deleteAllByTripId(UUID tripId);
     void reassignParticipant(UUID tripId, UUID fromParticipantId, UUID toParticipantId);
+    boolean hasAnyExpenseInvolvement(UUID participantId);
 }

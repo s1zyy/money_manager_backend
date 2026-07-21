@@ -1,9 +1,11 @@
 package vlad.corp.money_manager_backend.infrastructure.persistence.participant;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import vlad.corp.money_manager_backend.domain.model.Participant;
 import vlad.corp.money_manager_backend.domain.repository.ParticipantRepository;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,6 +48,12 @@ public class ParticipantRepositoryImpl implements ParticipantRepository {
     @Override
     public void deleteById(UUID id) {
         jpaRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void softDelete(UUID id) {
+        jpaRepository.softDeleteById(id, LocalDateTime.now());
     }
 
 }
