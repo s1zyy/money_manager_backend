@@ -1,4 +1,4 @@
-package vlad.corp.money_manager_backend.application.exception;
+package vlad.corp.money_manager_backend.application.exceptions;
 
 public class InvalidParticipantException extends RuntimeException {
     public InvalidParticipantException(String message) {

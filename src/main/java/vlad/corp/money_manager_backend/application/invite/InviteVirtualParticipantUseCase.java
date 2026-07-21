@@ -2,7 +2,7 @@ package vlad.corp.money_manager_backend.application.invite;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import vlad.corp.money_manager_backend.application.exception.NotFoundException;
+import vlad.corp.money_manager_backend.application.exceptions.NotFoundException;
 import vlad.corp.money_manager_backend.domain.exceptions.BusinessException;
 import vlad.corp.money_manager_backend.domain.model.Participant;
 import vlad.corp.money_manager_backend.domain.model.Trip;

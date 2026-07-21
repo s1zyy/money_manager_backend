@@ -1,7 +1,7 @@
 package vlad.corp.money_manager_backend.application.expense;
 
-import vlad.corp.money_manager_backend.application.exception.InvalidParticipantException;
-import vlad.corp.money_manager_backend.application.exception.NotFoundException;
+import vlad.corp.money_manager_backend.application.exceptions.InvalidParticipantException;
+import vlad.corp.money_manager_backend.application.exceptions.NotFoundException;
 import vlad.corp.money_manager_backend.domain.model.Expense;
 import vlad.corp.money_manager_backend.domain.model.SplitMode;
 import vlad.corp.money_manager_backend.domain.model.Trip;

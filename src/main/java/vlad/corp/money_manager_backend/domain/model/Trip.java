@@ -2,7 +2,7 @@ package vlad.corp.money_manager_backend.domain.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import vlad.corp.money_manager_backend.application.exception.*;
+import vlad.corp.money_manager_backend.application.exceptions.*;
 import vlad.corp.money_manager_backend.domain.exceptions.*;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
 import java.time.LocalDate;
@@ -127,7 +127,7 @@ public class Trip {
     public void addParticipant(UUID participantId, Money budget) {
         ensureNotArchived();
         if (this.participantBudgets.containsKey(participantId)) {
-            throw new ParticipantAlreadyExistException("Participant with id " + participantId + " already exists in trip with id " + id);
+            throw new ParticipantAlreadyExistException("You are already a participant in this trip");
         }
         if (this.participantBudgets.size() >= 10) {
             throw new BusinessException("Cannot add more than 10 participants to a trip");

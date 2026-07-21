@@ -1,4 +1,4 @@
-package vlad.corp.money_manager_backend.application.exception;
+package vlad.corp.money_manager_backend.application.exceptions;
 
 public class ForbiddenException extends RuntimeException {
     public ForbiddenException(String message) {

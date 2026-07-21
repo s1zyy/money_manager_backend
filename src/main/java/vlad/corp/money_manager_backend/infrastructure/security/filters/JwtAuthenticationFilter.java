@@ -1,4 +1,4 @@
-package vlad.corp.money_manager_backend.infrastructure.security;
+package vlad.corp.money_manager_backend.infrastructure.security.filters;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -10,6 +10,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import vlad.corp.money_manager_backend.infrastructure.security.AuthenticatedParticipant;
+import vlad.corp.money_manager_backend.infrastructure.security.JwtPayload;
+import vlad.corp.money_manager_backend.infrastructure.security.JwtUtil;
+
 import java.io.IOException;
 import java.util.List;
 
