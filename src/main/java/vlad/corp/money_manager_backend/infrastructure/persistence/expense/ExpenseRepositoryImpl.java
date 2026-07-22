@@ -4,7 +4,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import vlad.corp.money_manager_backend.domain.model.Expense;
 import vlad.corp.money_manager_backend.domain.repository.ExpenseRepository;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @Repository
 public class ExpenseRepositoryImpl implements ExpenseRepository {
@@ -41,9 +44,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     @Override
     public Set<UUID> findActiveParticipantIds(UUID tripId) {
-        Set<UUID> ids = new HashSet<>(jpaRepository.findDistinctParticipantsInExpenses(tripId));
-        ids.addAll(jpaRepository.findDistinctPayersInExpenses(tripId));
-        return ids;
+        return jpaRepository.findActiveParticipantIds(tripId);
     }
 
     @Override

@@ -9,11 +9,16 @@ import java.util.UUID;
 
 
 public interface ExpenseJpaRepository extends JpaRepository<ExpenseEntity, UUID> {
-    Set<ExpenseEntity> findAllByTripId(UUID id);
-    @Query("SELECT DISTINCT KEY(ps) FROM ExpenseEntity e JOIN e.participantShares ps WHERE e.tripId = :tripId")
-    Set<UUID> findDistinctParticipantsInExpenses(@Param("tripId") UUID tripId);
-    @Query("SELECT DISTINCT e.payerId FROM ExpenseEntity e WHERE e.tripId = :tripId")
-    Set<UUID> findDistinctPayersInExpenses(@Param("tripId") UUID tripId);
+    @Query("SELECT DISTINCT e FROM ExpenseEntity e LEFT JOIN FETCH e.participantShares WHERE e.tripId = :id")
+    Set<ExpenseEntity> findAllByTripId(@Param("id") UUID id);
+    @Query(value = """
+            SELECT DISTINCT participant_id FROM expense_participants
+            WHERE expense_id IN (SELECT id FROM expenses WHERE trip_id = :tripId)
+            UNION
+            SELECT DISTINCT payer_id FROM expenses
+            WHERE trip_id = :tripId AND payer_id IS NOT NULL
+            """, nativeQuery = true)
+    Set<UUID> findActiveParticipantIds(@Param("tripId") UUID tripId);
     @Query(value = "SELECT (EXISTS(SELECT 1 FROM expenses WHERE payer_id = :id) OR EXISTS(SELECT 1 FROM expense_participants WHERE participant_id = :id))", nativeQuery = true)
     boolean existsAnyExpenseInvolvement(@Param("id") UUID participantId);
 

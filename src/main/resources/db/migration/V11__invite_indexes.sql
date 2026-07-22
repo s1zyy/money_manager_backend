@@ -1,0 +1,3 @@
+CREATE INDEX idx_invites_virtual_participant_id ON virtual_participant_invites(virtual_participant_id);
+CREATE INDEX idx_invites_trip_id ON virtual_participant_invites(trip_id);
+CREATE INDEX idx_invites_expires_at ON virtual_participant_invites(expires_at);
