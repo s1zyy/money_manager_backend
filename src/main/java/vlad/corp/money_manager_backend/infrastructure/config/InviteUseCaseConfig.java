@@ -23,7 +23,7 @@ public class InviteUseCaseConfig {
             ParticipantRepository participantRepository,
             VirtualParticipantInviteRepository inviteRepository,
             JavaMailSender mailSender,
-            @Value("${spring.mail.username}") String fromEmail) {
+            @Value("${spring.mail.from}") String fromEmail) {
         return new InviteVirtualParticipantUseCase(
                 tripRepository, participantRepository, inviteRepository, mailSender, fromEmail);
     }

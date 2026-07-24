@@ -13,16 +13,18 @@ public class FeedbackUseCase {
 
     private final JavaMailSender mailSender;
     private final String fromEmail;
+    private final String toEmail;
 
-    public FeedbackUseCase(JavaMailSender mailSender, String fromEmail) {
+    public FeedbackUseCase(JavaMailSender mailSender, String fromEmail, String toEmail) {
         this.mailSender = mailSender;
         this.fromEmail = fromEmail;
+        this.toEmail = toEmail;
     }
 
     public void execute(String senderEmail, String type, String message) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setFrom(fromEmail);
-        mail.setTo(fromEmail);
+        mail.setTo(toEmail);
         mail.setSubject("[TripPace " + type + "] from " + senderEmail);
         mail.setText(
                 "Type: " + type + "\n" +

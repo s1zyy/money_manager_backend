@@ -12,7 +12,8 @@ public class FeedbackUseCaseConfig {
     @Bean
     public FeedbackUseCase feedbackUseCase(
             JavaMailSender mailSender,
-            @Value("${spring.mail.username}") String fromEmail) {
-        return new FeedbackUseCase(mailSender, fromEmail);
+            @Value("${spring.mail.from}") String fromEmail,
+            @Value("${feedback.to-email}") String toEmail) {
+        return new FeedbackUseCase(mailSender, fromEmail, toEmail);
     }
 }
