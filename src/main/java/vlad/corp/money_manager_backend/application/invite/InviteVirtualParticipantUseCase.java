@@ -1,5 +1,7 @@
 package vlad.corp.money_manager_backend.application.invite;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import vlad.corp.money_manager_backend.application.exceptions.NotFoundException;
@@ -14,9 +16,11 @@ import vlad.corp.money_manager_backend.domain.repository.VirtualParticipantInvit
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class InviteVirtualParticipantUseCase {
 
+    private static final Logger log = LoggerFactory.getLogger(InviteVirtualParticipantUseCase.class);
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int TOKEN_LENGTH = 8;
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -76,7 +80,16 @@ public class InviteVirtualParticipantUseCase {
         );
         inviteRepository.save(invite);
 
-        sendInviteEmail(email, virtual.getName(), trip.getName(), token);
+        String participantName = virtual.getName();
+        String tripName = trip.getName();
+        CompletableFuture.runAsync(() -> {
+            try {
+                sendInviteEmail(email, participantName, tripName, token);
+                log.info("Invite email sent to {}", email);
+            } catch (Exception e) {
+                log.error("Failed to send invite email to {}: {}", email, e.getMessage());
+            }
+        });
     }
 
     private String generateUniqueToken() {

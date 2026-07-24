@@ -1,9 +1,15 @@
 package vlad.corp.money_manager_backend.application.feedback;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.util.concurrent.CompletableFuture;
+
 public class FeedbackUseCase {
+
+    private static final Logger log = LoggerFactory.getLogger(FeedbackUseCase.class);
 
     private final JavaMailSender mailSender;
     private final String fromEmail;
@@ -23,6 +29,13 @@ public class FeedbackUseCase {
                 "From: " + senderEmail + "\n\n" +
                 "Message:\n" + message
         );
-        mailSender.send(mail);
+        CompletableFuture.runAsync(() -> {
+            try {
+                mailSender.send(mail);
+                log.info("Feedback email sent from {}", senderEmail);
+            } catch (Exception e) {
+                log.error("Failed to send feedback email: {}", e.getMessage());
+            }
+        });
     }
 }
