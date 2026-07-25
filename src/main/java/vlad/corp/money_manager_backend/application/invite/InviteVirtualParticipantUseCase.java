@@ -2,9 +2,8 @@ package vlad.corp.money_manager_backend.application.invite;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import vlad.corp.money_manager_backend.application.exceptions.NotFoundException;
+import vlad.corp.money_manager_backend.application.port.EmailSender;
 import vlad.corp.money_manager_backend.domain.exceptions.BusinessException;
 import vlad.corp.money_manager_backend.domain.model.Participant;
 import vlad.corp.money_manager_backend.domain.model.Trip;
@@ -28,19 +27,16 @@ public class InviteVirtualParticipantUseCase {
     private final TripRepository tripRepository;
     private final ParticipantRepository participantRepository;
     private final VirtualParticipantInviteRepository inviteRepository;
-    private final JavaMailSender mailSender;
-    private final String fromEmail;
+    private final EmailSender emailSender;
 
     public InviteVirtualParticipantUseCase(TripRepository tripRepository,
                                            ParticipantRepository participantRepository,
                                            VirtualParticipantInviteRepository inviteRepository,
-                                           JavaMailSender mailSender,
-                                           String fromEmail) {
+                                           EmailSender emailSender) {
         this.tripRepository = tripRepository;
         this.participantRepository = participantRepository;
         this.inviteRepository = inviteRepository;
-        this.mailSender = mailSender;
-        this.fromEmail = fromEmail;
+        this.emailSender = emailSender;
     }
 
     public void execute(UUID tripId, UUID ownerId, UUID virtualParticipantId, String email) {
@@ -109,18 +105,13 @@ public class InviteVirtualParticipantUseCase {
     }
 
     private void sendInviteEmail(String toEmail, String participantName, String tripName, String token) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);
-        message.setTo(toEmail);
-        message.setSubject("You were invited on a trip «" + tripName + "»");
-        message.setText(
-                "Hi, " + participantName + "!\n\n" +
+        String subject = "You were invited on a trip «" + tripName + "»";
+        String text = "Hi, " + participantName + "!\n\n" +
                 "You have been invited to join the trip «" + tripName + "» in TripPace app.\n\n" +
                 "Download the app and enter this code when registering:\n\n" +
                 "  " + token + "\n\n" +
                 "The code is valid for 7 days.\n\n" +
-                "After logging in, you'll see your spending, your daily limit, and you can add expenses yourself."
-        );
-        mailSender.send(message);
+                "After logging in, you'll see your spending, your daily limit, and you can add expenses yourself.";
+        emailSender.send(toEmail, subject, text);
     }
 }
