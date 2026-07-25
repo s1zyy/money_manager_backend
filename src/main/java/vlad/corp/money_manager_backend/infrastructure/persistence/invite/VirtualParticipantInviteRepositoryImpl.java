@@ -5,6 +5,7 @@ import vlad.corp.money_manager_backend.domain.model.VirtualParticipantInvite;
 import vlad.corp.money_manager_backend.domain.repository.VirtualParticipantInviteRepository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class VirtualParticipantInviteRepositoryImpl implements VirtualParticipantInviteRepository {
@@ -30,6 +31,19 @@ public class VirtualParticipantInviteRepositoryImpl implements VirtualParticipan
     @Override
     public Optional<VirtualParticipantInvite> findByToken(String token) {
         return jpa.findById(token)
+                .map(e -> new VirtualParticipantInvite(
+                        e.getToken(),
+                        e.getVirtualParticipantId(),
+                        e.getTripId(),
+                        e.getInvitedEmail(),
+                        e.getCreatedAt(),
+                        e.getExpiresAt()
+                ));
+    }
+
+    @Override
+    public Optional<VirtualParticipantInvite> findByVirtualParticipantId(UUID virtualParticipantId) {
+        return jpa.findByVirtualParticipantId(virtualParticipantId)
                 .map(e -> new VirtualParticipantInvite(
                         e.getToken(),
                         e.getVirtualParticipantId(),

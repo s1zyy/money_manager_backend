@@ -39,7 +39,7 @@ public class InviteVirtualParticipantUseCase {
         this.emailSender = emailSender;
     }
 
-    public void execute(UUID tripId, UUID ownerId, UUID virtualParticipantId, String email) {
+    public void execute(UUID tripId, UUID ownerId, UUID virtualParticipantId, String email, boolean force) {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new NotFoundException("Trip not found"));
 
@@ -63,6 +63,13 @@ public class InviteVirtualParticipantUseCase {
         if (!trip.getParticipantIds().contains(virtualParticipantId)) {
             throw new BusinessException("Participant is not in this trip");
         }
+
+        inviteRepository.findByVirtualParticipantId(virtualParticipantId).ifPresent(existing -> {
+            if (!force) {
+                throw new BusinessException("Invite already sent");
+            }
+            inviteRepository.deleteByToken(existing.token());
+        });
 
         String token = generateUniqueToken();
 

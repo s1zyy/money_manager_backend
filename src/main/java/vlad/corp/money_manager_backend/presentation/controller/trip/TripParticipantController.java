@@ -107,6 +107,6 @@ public class TripParticipantController {
             @PathVariable UUID participantId,
             @Valid @RequestBody InviteRequest request
     ) {
-        inviteVirtualParticipantUseCase.execute(tripId, owner.participantId(), participantId, request.email());
+        inviteVirtualParticipantUseCase.execute(tripId, owner.participantId(), participantId, request.email(), request.force());
     }
 }
