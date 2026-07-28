@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center">💸 Trip Expense Splitter — Backend</h1>
+  <h1 align="center">✈️ TripPace — Backend</h1>
 </p>
 
 <p align="center">
@@ -8,6 +8,7 @@
   <img src="https://img.shields.io/badge/PostgreSQL-15-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL 15"/>
   <img src="https://img.shields.io/badge/JWT-Auth-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT Auth"/>
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose"/>
+  <img src="https://img.shields.io/badge/Deployed-Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" alt="Railway"/>
   <img src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" alt="License MIT"/>
 </p>
 
@@ -21,9 +22,9 @@
 
 ## About
 
-Backend for **Money Manager** — a Splitwise-like mobile app for group trips. Handles user auth, trip lifecycle, expense tracking, and automatic balance calculation (who owes whom and how much).
+Backend for **TripPace** — a mobile app for splitting trip expenses between friends. Handles user auth, trip lifecycle, expense tracking, automatic balance calculation, and email invites for virtual participants.
 
-Built with Clean Architecture — domain logic is fully decoupled from frameworks and infrastructure.
+Built with Clean Architecture — domain logic is fully decoupled from frameworks and infrastructure. Deployed on Railway at `https://trippace.up.railway.app`.
 
 ---
 
@@ -34,10 +35,14 @@ Built with Clean Architecture — domain logic is fully decoupled from framework
 | 🔐 | JWT-based authentication (register / login) |
 | ✈️ | Full trip lifecycle — create, update, archive, unarchive, delete |
 | 👥 | Join trips via unique invite codes; virtual participants for non-app members |
+| 📧 | Email invites for virtual participants via Brevo HTTP API |
+| 🔗 | Claim flow — virtual participant links their real account via invite token |
 | 💰 | Expense tracking with equal or custom splits per participant |
 | 📊 | Automatic balance calculation & settlement suggestions |
 | 📉 | Per-participant budget & daily limit tracking |
-| 🗄️ | Schema versioning with Flyway migrations |
+| 🛡️ | App version enforcement via `X-App-Version` header |
+| 🗑️ | Soft delete & full account deletion |
+| 🗄️ | Schema versioning with Flyway migrations (V1–V10) |
 | 🐳 | One-command PostgreSQL setup via Docker Compose |
 
 ---
@@ -149,7 +154,7 @@ All endpoints are under `/api`. JWT token required in `Authorization: Bearer <to
 | `GET` | `/api/trips/{id}/dashboard` | Get balances, spending stats & expenses |
 | `GET` | `/api/trips/{id}/settlement` | Get settlement transfers (who pays whom) |
 
-### Participants
+### Participants & Invites
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -159,6 +164,20 @@ All endpoints are under `/api`. JWT token required in `Authorization: Bearer <to
 | `POST` | `/api/trips/{tripId}/participants/virtual` | Add virtual participant (owner only) |
 | `PUT` | `/api/trips/{id}/my-budget` | Update your own budget |
 | `PUT` | `/api/trips/{id}/participants/{pid}/budget` | Update any participant's budget (owner only) |
+| `POST` | `/api/trips/{tripId}/participants/{pid}/invite` | Send email invite to virtual participant |
+| `POST` | `/api/invites/check` | Check invite token (returns trip & participant info) |
+| `POST` | `/api/invites/claim` | Claim invite — register and join as real participant |
+| `POST` | `/api/invites/claim-with-login` | Claim invite — login with existing account |
+
+### Account
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/participants/me` | Get current user profile |
+| `PUT` | `/api/participants/me` | Update profile (name) |
+| `PUT` | `/api/participants/me/password` | Change password |
+| `DELETE` | `/api/participants/me` | Soft delete account (preserves trip data) |
+| `DELETE` | `/api/participants/me/full` | Full delete account + all owned trips |
 
 ### Expenses
 
@@ -310,13 +329,13 @@ participants ──(1:M)──► trips (as owner)
 | `expense_participants` | Participants included in an expense (EQUAL split — amount is null) |
 | `expense_custom_shares` | Explicit share amounts per participant (CUSTOM split only) |
 
-Migrations: [`db/migration/`](src/main/resources/db/migration/) — V1 initial schema through V7 prepaid expenses flag.
+Migrations: [`db/migration/`](src/main/resources/db/migration/) — V1 initial schema through V10 (soft delete).
 
 ---
 
 ## Related
 
-**[📱 Money Manager Mobile App](https://github.com/s1zyy/money_manager)** — Flutter client for iOS & Android
+**[📱 TripPace Mobile App](https://github.com/s1zyy/money_manager)** — Flutter client for iOS & Android
 
 ```
 ┌─────────────────────────┐
