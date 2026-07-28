@@ -63,7 +63,7 @@ public class Trip {
 
     public void ensureNotArchived() {
         if (this.status == TripStatus.ARCHIVED) {
-            throw new ArchivedTripException("Trip with id " + this.id + " is archived and can't be modified.");
+            throw new ArchivedTripException("This trip is archived and can't be modified.");
         }
     }
 

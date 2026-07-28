@@ -25,7 +25,7 @@ public class TripAccessPolicy {
 
     public void ensureNotArchived(Trip trip) {
         if (trip.getStatus() == TripStatus.ARCHIVED) {
-            throw new ArchivedTripException("Trip with id: " + trip.getId() + " is archived and can't be modified.");
+            throw new ArchivedTripException("This trip is archived and can't be modified.");
         }
     }
 
