@@ -2,6 +2,8 @@ package vlad.corp.money_manager_backend.presentation.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import vlad.corp.money_manager_backend.application.auth.AppleSignInUseCase;
+import vlad.corp.money_manager_backend.application.auth.GoogleSignInUseCase;
 import vlad.corp.money_manager_backend.application.auth.LoginUseCase;
 import vlad.corp.money_manager_backend.application.auth.RegisterUseCase;
 import vlad.corp.money_manager_backend.application.invite.InviteTokenInfo;
@@ -9,6 +11,8 @@ import vlad.corp.money_manager_backend.application.invite.ClaimInviteWithLoginUs
 import vlad.corp.money_manager_backend.application.invite.ValidateInviteTokenUseCase;
 import vlad.corp.money_manager_backend.presentation.dto.auth.AuthRequest;
 import vlad.corp.money_manager_backend.presentation.dto.auth.ClaimInviteWithLoginRequest;
+import vlad.corp.money_manager_backend.presentation.dto.auth.AppleAuthRequest;
+import vlad.corp.money_manager_backend.presentation.dto.auth.GoogleAuthRequest;
 import vlad.corp.money_manager_backend.presentation.dto.auth.LoginRequest;
 import vlad.corp.money_manager_backend.presentation.dto.auth.LoginResponse;
 import vlad.corp.money_manager_backend.presentation.dto.invite.InviteTokenInfoResponse;
@@ -18,15 +22,21 @@ import vlad.corp.money_manager_backend.presentation.dto.invite.InviteTokenInfoRe
 public class AuthController {
     private final RegisterUseCase registerUseCase;
     private final LoginUseCase loginUseCase;
+    private final GoogleSignInUseCase googleSignInUseCase;
+    private final AppleSignInUseCase appleSignInUseCase;
     private final ValidateInviteTokenUseCase validateInviteTokenUseCase;
     private final ClaimInviteWithLoginUseCase claimInviteWithLoginUseCase;
 
     public AuthController(RegisterUseCase registerUseCase,
                           LoginUseCase loginUseCase,
+                          GoogleSignInUseCase googleSignInUseCase,
+                          AppleSignInUseCase appleSignInUseCase,
                           ValidateInviteTokenUseCase validateInviteTokenUseCase,
                           ClaimInviteWithLoginUseCase claimInviteWithLoginUseCase) {
         this.registerUseCase = registerUseCase;
         this.loginUseCase = loginUseCase;
+        this.googleSignInUseCase = googleSignInUseCase;
+        this.appleSignInUseCase = appleSignInUseCase;
         this.validateInviteTokenUseCase = validateInviteTokenUseCase;
         this.claimInviteWithLoginUseCase = claimInviteWithLoginUseCase;
     }
@@ -48,6 +58,18 @@ public class AuthController {
     public InviteTokenInfoResponse validateInvite(@RequestParam String token) {
         InviteTokenInfo info = validateInviteTokenUseCase.execute(token);
         return new InviteTokenInfoResponse(info.tripName(), info.participantName(), info.invitedEmail(), info.requiresLogin());
+    }
+
+    @PostMapping("/google")
+    public LoginResponse googleSignIn(@RequestBody GoogleAuthRequest request) {
+        var result = googleSignInUseCase.execute(request.idToken());
+        return new LoginResponse(result.token(), result.name(), result.email());
+    }
+
+    @PostMapping("/apple")
+    public LoginResponse appleSignIn(@RequestBody AppleAuthRequest request) {
+        var result = appleSignInUseCase.execute(request.identityToken(), request.name());
+        return new LoginResponse(result.token(), result.name(), result.email());
     }
 
     @PostMapping("/claim-invite-login")
