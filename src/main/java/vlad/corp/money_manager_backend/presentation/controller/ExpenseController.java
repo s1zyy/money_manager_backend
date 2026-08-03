@@ -41,6 +41,7 @@ public class ExpenseController {
             @AuthenticationPrincipal AuthenticatedParticipant participant,
             @Valid @RequestBody CreateExpenseDto expenseDto) {
         addExpenseUseCase.execute(
+                participant.participantId(),
                 tripId,
                 expenseDto.payerId(),
                 expenseDto.amount(),
@@ -85,7 +86,8 @@ public class ExpenseController {
                 expenseDto.splitMode(),
                 expenseDto.newParticipantIds(),
                 expenseDto.customShares(),
-                expenseDto.description());
+                expenseDto.description(),
+                expenseDto.isPrepaid());
         return expenseMapper.toDto(expense);
     }
 

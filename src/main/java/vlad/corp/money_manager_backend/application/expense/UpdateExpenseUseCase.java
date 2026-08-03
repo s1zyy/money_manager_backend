@@ -40,7 +40,8 @@ public class UpdateExpenseUseCase {
                            SplitMode newSplitMode,
                            Set<UUID> newParticipantIds,
                            Map<UUID, BigDecimal> newCustomShares,
-                           String newDescription) {
+                           String newDescription,
+                           Boolean newIsPrepaid) {
 
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new NotFoundException("Expense not found"));
@@ -69,7 +70,7 @@ public class UpdateExpenseUseCase {
                 shares,
                 newExpenseDate != null ? newExpenseDate : expense.getDate(),
                 newDescription != null ? newDescription : expense.getDescription(),
-                expense.isPrepaid()
+                newIsPrepaid != null ? newIsPrepaid : expense.isPrepaid()
         );
         expenseRepository.save(updatedExpense);
         return updatedExpense;

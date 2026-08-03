@@ -14,5 +14,6 @@ public record UpdateExpenseDto(
         SplitMode splitMode,
         Set<UUID> newParticipantIds,
         Map<UUID, BigDecimal> customShares,
-        String description
+        String description,
+        Boolean isPrepaid
 ) {}

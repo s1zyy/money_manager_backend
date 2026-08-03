@@ -30,7 +30,8 @@ public class AddExpenseUseCase {
         this.tripAccessPolicy = tripAccessPolicy;
     }
 
-    public Expense execute(UUID tripId,
+    public Expense execute(UUID participantId,
+                            UUID tripId,
                            UUID payerId,
                            BigDecimal amountBigD,
                            LocalDate date,
@@ -43,7 +44,10 @@ public class AddExpenseUseCase {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new NotFoundException("Trip not found"));
 
+        tripAccessPolicy.ensureParticipant(trip, participantId);
+
         tripAccessPolicy.ensureNotArchived(trip);
+
         Money amount = Money.of(amountBigD);
 
         Set<UUID> tripParticipants = new HashSet<>(trip.getParticipantIds());
