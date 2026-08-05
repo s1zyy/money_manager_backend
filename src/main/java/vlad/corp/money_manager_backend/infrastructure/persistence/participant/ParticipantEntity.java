@@ -35,4 +35,7 @@ public class ParticipantEntity {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
 }

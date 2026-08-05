@@ -1,5 +1,6 @@
 package vlad.corp.money_manager_backend.infrastructure.config;
 
+import com.cloudinary.Cloudinary;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,6 +9,7 @@ import vlad.corp.money_manager_backend.application.participant.ChangePasswordUse
 import vlad.corp.money_manager_backend.application.participant.DeleteAccountUseCase;
 import vlad.corp.money_manager_backend.application.participant.FullDeleteAccountUseCase;
 import vlad.corp.money_manager_backend.application.participant.UpdateProfileUseCase;
+import vlad.corp.money_manager_backend.application.participant.UploadAvatarUseCase;
 import vlad.corp.money_manager_backend.domain.repository.ExpenseRepository;
 import vlad.corp.money_manager_backend.domain.repository.ParticipantRepository;
 import vlad.corp.money_manager_backend.domain.repository.TripRepository;
@@ -18,6 +20,11 @@ public class ParticipantUseCaseConfig {
     @Bean
     public UpdateProfileUseCase updateProfileUseCase(ParticipantRepository participantRepository) {
         return new UpdateProfileUseCase(participantRepository);
+    }
+
+    @Bean
+    public UploadAvatarUseCase uploadAvatarUseCase(ParticipantRepository participantRepository, Cloudinary cloudinary) {
+        return new UploadAvatarUseCase(participantRepository, cloudinary);
     }
 
     @Bean

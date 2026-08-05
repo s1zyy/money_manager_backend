@@ -6,5 +6,6 @@ public record ParticipantDto(
          UUID id,
          String name,
          String email,
-         boolean isVirtual) {
+         boolean isVirtual,
+         String avatarUrl) {
 }

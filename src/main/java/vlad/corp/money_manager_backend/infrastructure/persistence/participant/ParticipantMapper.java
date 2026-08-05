@@ -13,7 +13,8 @@ public class ParticipantMapper {
                 participant.getEmail(),
                 participant.getPasswordHash(),
                 participant.isVirtual(),
-                null
+                null,
+                participant.getAvatarUrl()
         );
     }
 
@@ -23,7 +24,8 @@ public class ParticipantMapper {
                 participantEntity.getName(),
                 participantEntity.getEmail(),
                 participantEntity.getPasswordHash(),
-                participantEntity.isVirtual()
+                participantEntity.isVirtual(),
+                participantEntity.getAvatarUrl()
         );
     }
 }

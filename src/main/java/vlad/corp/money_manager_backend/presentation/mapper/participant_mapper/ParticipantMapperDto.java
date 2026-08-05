@@ -11,7 +11,8 @@ public class ParticipantMapperDto {
                 participant.getId(),
                 participant.getName(),
                 participant.getEmail(),
-                participant.isVirtual()
+                participant.isVirtual(),
+                participant.getAvatarUrl()
         );
     }
 }
