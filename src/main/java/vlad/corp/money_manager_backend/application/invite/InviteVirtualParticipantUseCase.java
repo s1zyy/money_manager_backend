@@ -112,13 +112,16 @@ public class InviteVirtualParticipantUseCase {
     }
 
     private void sendInviteEmail(String toEmail, String participantName, String tripName, String token) {
-        String subject = "You were invited on a trip «" + tripName + "»";
+        String deepLink = "trippace://invite?token=" + token;
+        String subject = "You were invited to the trip «" + tripName + "»";
         String text = "Hi, " + participantName + "!\n\n" +
-                "You have been invited to join the trip «" + tripName + "» in TripPace app.\n\n" +
-                "Download the app and enter this code when registering:\n\n" +
+                "You have been invited to join the trip «" + tripName + "» in TripPace.\n\n" +
+                "If you already have TripPace installed, tap the link below to join instantly:\n\n" +
+                "  " + deepLink + "\n\n" +
+                "Or open the app manually and enter this code:\n\n" +
                 "  " + token + "\n\n" +
-                "The code is valid for 7 days.\n\n" +
-                "After logging in, you'll see your spending, your daily limit, and you can add expenses yourself.";
+                "The invite is valid for 7 days.\n\n" +
+                "After joining, you'll see all your expenses, daily limit, and can add expenses yourself.";
         emailSender.send(toEmail, subject, text);
     }
 }
