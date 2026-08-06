@@ -114,14 +114,13 @@ public class InviteVirtualParticipantUseCase {
     private void sendInviteEmail(String toEmail, String participantName, String tripName, String token) {
         String deepLink = "trippace://invite?token=" + token;
         String subject = "You were invited to the trip «" + tripName + "»";
-        String text = "Hi, " + participantName + "!\n\n" +
-                "You have been invited to join the trip «" + tripName + "» in TripPace.\n\n" +
-                "If you already have TripPace installed, tap the link below to join instantly:\n\n" +
-                "  " + deepLink + "\n\n" +
-                "Or open the app manually and enter this code:\n\n" +
-                "  " + token + "\n\n" +
-                "The invite is valid for 7 days.\n\n" +
-                "After joining, you'll see all your expenses, daily limit, and can add expenses yourself.";
-        emailSender.send(toEmail, subject, text);
+        String html = "<p>Hi, <b>" + participantName + "</b>!</p>" +
+                "<p>You have been invited to join the trip <b>«" + tripName + "»</b> in TripPace.</p>" +
+                "<p>If you already have TripPace installed, tap the button below:</p>" +
+                "<p><a href=\"" + deepLink + "\" style=\"background:#6C63FF;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;\">Open in TripPace</a></p>" +
+                "<p>Or enter this code manually in the app:</p>" +
+                "<p style=\"font-size:24px;font-weight:bold;letter-spacing:6px;\">" + token + "</p>" +
+                "<p style=\"color:#888;\">The invite is valid for 7 days.</p>";
+        emailSender.send(toEmail, subject, html);
     }
 }
