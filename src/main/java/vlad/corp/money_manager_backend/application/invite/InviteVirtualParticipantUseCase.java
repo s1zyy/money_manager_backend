@@ -112,7 +112,7 @@ public class InviteVirtualParticipantUseCase {
     }
 
     private void sendInviteEmail(String toEmail, String participantName, String tripName, String token) {
-        String deepLink = "trippace://invite?token=" + token;
+        String deepLink = "https://trippace.app/invite?token=" + token;
         String subject = "You were invited to the trip «" + tripName + "»";
         String html = "<p>Hi, <b>" + participantName + "</b>!</p>" +
                 "<p>You have been invited to join the trip <b>«" + tripName + "»</b> in TripPace.</p>" +
