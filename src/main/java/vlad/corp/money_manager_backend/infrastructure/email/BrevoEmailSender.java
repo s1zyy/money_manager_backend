@@ -36,7 +36,8 @@ public class BrevoEmailSender implements EmailSender {
                 "sender", Map.of("name", "TripPace", "email", fromEmail),
                 "to", List.of(Map.of("email", to)),
                 "subject", subject,
-                "htmlContent", text
+                "htmlContent", text,
+                "trackClicks", false
         );
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
