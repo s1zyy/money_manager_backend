@@ -82,7 +82,8 @@ public class AuthUseCaseConfig {
 
     @Bean
     public ResetPasswordUseCase resetPasswordUseCase(PasswordResetTokenRepository tokenRepository,
-                                                      ParticipantRepository participantRepository) {
-        return new ResetPasswordUseCase(tokenRepository, participantRepository);
+                                                      ParticipantRepository participantRepository,
+                                                      PasswordEncoder passwordEncoder) {
+        return new ResetPasswordUseCase(tokenRepository, participantRepository, passwordEncoder);
     }
 }
