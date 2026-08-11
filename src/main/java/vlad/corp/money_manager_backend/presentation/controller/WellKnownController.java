@@ -18,7 +18,8 @@ public class WellKnownController {
                         "appIDs": ["TZK3J42645.com.trippace.app"],
                         "components": [
                           { "/": "/join*" },
-                          { "/": "/invite*" }
+                          { "/": "/invite*" },
+                          { "/": "/reset*" }
                         ]
                       }
                     ]
@@ -45,6 +46,17 @@ public class WellKnownController {
                 appLink,
                 "You have been invited to TripPace",
                 "You have been invited to join a trip. Open TripPace to continue.",
+                "Open in TripPace"
+        );
+    }
+
+    @GetMapping(value = "/reset", produces = MediaType.TEXT_HTML_VALUE)
+    public String resetFallback(@RequestParam(required = false) String token) {
+        String appLink = "trippace://reset" + (token != null ? "?token=" + token : "");
+        return DeepLinkFallbackPage.render(
+                appLink,
+                "Reset your TripPace password",
+                "Open TripPace to set a new password.",
                 "Open in TripPace"
         );
     }

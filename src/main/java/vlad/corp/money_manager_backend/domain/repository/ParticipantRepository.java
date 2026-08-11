@@ -13,5 +13,5 @@ public interface ParticipantRepository {
     Set<Participant>  findAllByIds(Set<UUID> ids);
     void deleteById(UUID id);
     void softDelete(UUID id);
-
+    void updatePassword(UUID id, String newPassword);
 }

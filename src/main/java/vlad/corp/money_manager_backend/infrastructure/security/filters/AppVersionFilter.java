@@ -16,7 +16,7 @@ public class AppVersionFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String uri = request.getRequestURI();
-        return uri.startsWith("/.well-known/") || uri.equals("/join") || uri.equals("/invite");
+        return uri.startsWith("/.well-known/") || uri.equals("/join") || uri.equals("/invite") || uri.equals("/reset");
     }
 
     @Override

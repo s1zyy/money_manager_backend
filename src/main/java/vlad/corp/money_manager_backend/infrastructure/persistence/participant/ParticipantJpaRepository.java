@@ -17,4 +17,8 @@ public interface ParticipantJpaRepository extends JpaRepository<ParticipantEntit
     @Modifying
     @Query("UPDATE ParticipantEntity p SET p.email = null, p.passwordHash = null, p.deletedAt = :deletedAt WHERE p.id = :id")
     void softDeleteById(@Param("id") UUID id, @Param("deletedAt") LocalDateTime deletedAt);
+
+    @Modifying
+    @Query("UPDATE ParticipantEntity p SET p.passwordHash = :newPassword WHERE p.id = :id")
+    void updatePasswordById(@Param("id") UUID id, @Param("newPassword") String newPassword);
 }

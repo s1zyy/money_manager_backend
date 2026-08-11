@@ -56,4 +56,9 @@ public class ParticipantRepositoryImpl implements ParticipantRepository {
         jpaRepository.softDeleteById(id, LocalDateTime.now());
     }
 
+    @Override
+    @Transactional
+    public void updatePassword(UUID id, String newPassword) {
+        jpaRepository.updatePasswordById(id, newPassword);
+    }
 }
