@@ -24,7 +24,7 @@
 
 Backend for **TripPace** — a mobile app for splitting trip expenses between friends. Handles user auth, trip lifecycle, expense tracking, automatic balance calculation, and email invites for virtual participants.
 
-Built with Clean Architecture — domain logic is fully decoupled from frameworks and infrastructure. Deployed on Railway at `https://trippace.up.railway.app`.
+Built with Clean Architecture — domain logic is fully decoupled from frameworks and infrastructure. Deployed on Railway at `https://trippace.up.railway.app`. The mobile client is ready for App Store and Google Play.
 
 ---
 
@@ -32,7 +32,7 @@ Built with Clean Architecture — domain logic is fully decoupled from framework
 
 | | Feature |
 |---|---|
-| 🔐 | JWT-based authentication (register / login) |
+| 🔐 | JWT-based authentication (register / login / forgot & reset password) |
 | ✈️ | Full trip lifecycle — create, update, archive, unarchive, delete |
 | 👥 | Join trips via unique invite codes; virtual participants for non-app members |
 | 📧 | Email invites for virtual participants via Brevo HTTP API |
@@ -138,6 +138,18 @@ All endpoints are under `/api`. JWT token required in `Authorization: Bearer <to
 |--------|----------|-------------|
 | `POST` | `/api/auth/register` | Register a new user |
 | `POST` | `/api/auth/login` | Login, get JWT token |
+| `POST` | `/api/auth/forgot-password` | Send password reset email |
+| `POST` | `/api/auth/reset-password` | Reset password using token from email |
+
+### Public Pages
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/privacy` | Privacy Policy page (HTML) |
+| `GET` | `/delete-account` | Account deletion instructions (HTML) |
+| `GET` | `/join?code=...` | Deep link fallback — opens app or prompts install |
+| `GET` | `/reset?token=...` | Password reset deep link fallback |
+| `GET` | `/invite?token=...` | Invite claim deep link fallback |
 
 ### Trips
 
