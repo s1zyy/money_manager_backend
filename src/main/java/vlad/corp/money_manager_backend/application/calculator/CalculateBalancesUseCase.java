@@ -1,6 +1,7 @@
 package vlad.corp.money_manager_backend.application.calculator;
 
 import vlad.corp.money_manager_backend.domain.model.Expense;
+import vlad.corp.money_manager_backend.domain.model.SplitMode;
 import vlad.corp.money_manager_backend.domain.model.Trip;
 import vlad.corp.money_manager_backend.domain.value_objects.Money;
 import java.math.BigDecimal;
@@ -30,19 +31,36 @@ public class CalculateBalancesUseCase {
             balances.put(payerId, balances.getOrDefault(payerId, Money.zero()).add(totalAmount));
 
             Map<UUID, BigDecimal> shares = expense.getParticipantShares();
-            int count = shares.size();
 
-            for (Map.Entry<UUID, BigDecimal> entry : shares.entrySet()) {
-                UUID participantId = entry.getKey();
-                BigDecimal shareAmount = entry.getValue() != null
-                        ? entry.getValue()
-                        : totalAmount.amount().divide(BigDecimal.valueOf(count), 2, RoundingMode.HALF_UP);
-
-                Money share = new Money(shareAmount);
-                Money current = balances.getOrDefault(participantId, Money.zero());
-                balances.put(participantId, current.subtract(share));
+            if (expense.getSplitMode() == SplitMode.EQUAL) {
+                applyEqualSplit(balances, shares.keySet().stream().toList(), totalAmount);
+            } else {
+                for (Map.Entry<UUID, BigDecimal> entry : shares.entrySet()) {
+                    Money share = new Money(entry.getValue());
+                    balances.put(entry.getKey(), balances.getOrDefault(entry.getKey(), Money.zero()).subtract(share));
+                }
             }
         }
         return balances;
+    }
+
+    // Distributes totalAmount across participants without losing cents.
+    // Base share goes to everyone; the remainder (in cents) is given
+    // one cent at a time to the first participants in iteration order.
+    private void applyEqualSplit(Map<UUID, Money> balances, List<UUID> participants, Money totalAmount) {
+        long totalCents = totalAmount.amount()
+                .multiply(BigDecimal.valueOf(100))
+                .setScale(0, RoundingMode.HALF_UP)
+                .longValue();
+        int count = participants.size();
+        long baseCents = totalCents / count;
+        long remainder = totalCents % count;
+
+        for (int i = 0; i < count; i++) {
+            long cents = baseCents + (i < remainder ? 1 : 0);
+            Money share = new Money(BigDecimal.valueOf(cents, 2));
+            UUID id = participants.get(i);
+            balances.put(id, balances.getOrDefault(id, Money.zero()).subtract(share));
+        }
     }
 }
